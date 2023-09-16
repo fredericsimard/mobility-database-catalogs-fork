@@ -88,10 +88,12 @@ jobs:
             while IFS= read -r line; do
                 csv_lines+=("$line")
             done <<< "$CSV_DATA"
+
+            echo "CSV_LINES=${csv_lines}" >> $GITHUB_ENV
             
-            for line in "${csv_lines[@]}"; do
-                echo "CSV_LINE: ${line}"
-            done
+            # for line in "${csv_lines[@]}"; do
+            #     echo "CSV_LINE: ${line}"
+            # done
             # set +x  # Disable debugging
 
       - name: Process each lines
