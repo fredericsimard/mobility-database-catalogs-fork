@@ -83,8 +83,11 @@ jobs:
 
             IFS=$'\n'
             
-            csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
-            IFS=$'\n' && read -rd '' -a csv_lines <<< "$csv_data_no_headers"
+            declare -a csv_lines
+
+            while IFS= read -r line; do
+                csv_lines+=("$line")
+            done <<< "$CSV_DATA"
             
             for line in "${csv_lines[@]}"; do
                 echo "CSV_LINE: ${line}"
