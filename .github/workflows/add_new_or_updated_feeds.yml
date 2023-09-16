@@ -38,6 +38,10 @@ jobs:
             echo "TODAYS_DAY=$(date '+%d')" >> $GITHUB_ENV # Ex.: 27
             echo "TODAYS_MONTH=$(date '+%m')" >> $GITHUB_ENV # Ex.: 07
             echo "TODAYS_YEAR=$(date '+%Y')" >> $GITHUB_ENV # Ex.: 2023
+
+      - name: Create branch name
+        id: create_branch_name
+        run: |
             echo "BRANCH=\"${{ env.TODAYS_YEAR }}-${{ env.TODAYS_MONTH }}-${{ env.TODAYS_DAY }}\"" >> $GITHUB_ENV # Branch name
 
       - name: Load secrets from 1Password
@@ -81,7 +85,7 @@ jobs:
         id: csv
         run: |
             CSV_DATA=$(curl -s "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
-
+            print $CSV_DATA
             # Convert the multi-line CSV data to an array of lines
             IFS=$'\n'
             csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
