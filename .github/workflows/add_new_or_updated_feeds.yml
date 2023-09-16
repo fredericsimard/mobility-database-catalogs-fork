@@ -115,9 +115,9 @@ jobs:
                 echo "$formatted_date"
             }
 
-            # lines=${{ steps.download_csv.outputs.CSVLINES }}
+            lines=$(echo "${{ steps.download_csv.outputs.CSVLINES }}" | jq -r .)
 
-            for line in "${{ steps.download_csv.outputs.CSVLINES }}"; do
+            for line in "${lines}[@]"; do
                 IFS=','
 
                 read -ra items_array <<< "$line"
