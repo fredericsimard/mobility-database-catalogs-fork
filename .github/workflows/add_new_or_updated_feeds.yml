@@ -75,7 +75,7 @@ jobs:
           python-version: '3.11' # install the python version needed
 
       - name: Download CSV from Google Sheets
-        id: csv
+        id: download_csv
         shell: bash
         run: |
             # set -x
@@ -115,7 +115,7 @@ jobs:
                 echo "$formatted_date"
             }
 
-            lines=${{ steps.id.outputs.CSVLINES }}
+            lines=${{ steps.download_csv.outputs.CSVLINES }}
 
             for line in "${lines[@]}"; do
                 IFS=','
