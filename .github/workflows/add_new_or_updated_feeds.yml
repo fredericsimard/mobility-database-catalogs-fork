@@ -85,13 +85,14 @@ jobs:
         id: csv
         run: |
             CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
-            echo $CSV_DATA
-            echo 1
+            #echo $CSV_DATA
+            #echo 1
             # Convert the multi-line CSV data to an array of lines
             IFS=$'\n'
-            echo 2
+            #echo 2
             csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
             echo 3
+            echo $csv_data_no_headers
             read -rd '' -a csv_lines <<< "$csv_data_no_headers"
             echo 4
             echo "CSV_LINES=${csv_lines}" >> $GITHUB_ENV # call ${{ env.CSV_LINES }}
