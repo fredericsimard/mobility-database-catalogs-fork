@@ -77,15 +77,15 @@ jobs:
       - name: Install python packages
         run: |
             python -m pip install --upgrade pip
-            pip install virtualenv
-            pip install gtfs_kit
-            pip install unidecode
+            pip install virtualenv --quiet
+            pip install gtfs_kit --quiet
+            pip install unidecode --quiet
 
       - name: Download CSV from Google Sheets
         id: csv
         run: |
             CSV_DATA=$(curl "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
-            print $CSV_DATA
+            # print $CSV_DATA
             # Convert the multi-line CSV data to an array of lines
             IFS=$'\n'
             csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
