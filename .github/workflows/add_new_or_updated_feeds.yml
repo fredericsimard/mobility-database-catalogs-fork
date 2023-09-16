@@ -76,7 +76,9 @@ jobs:
 
       - name: Download CSV from Google Sheets
         id: csv
+        shell: bash
         run: |
+            set -x
             CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
 
             IFS=$'\n'
@@ -87,6 +89,7 @@ jobs:
             for line in "${csv_lines[@]}"; do
                 echo "CSV_LINE: ${line}"
             done
+            set +x  # Disable debugging
 
       - name: Process each lines
         id: process-csv
