@@ -84,7 +84,7 @@ jobs:
       - name: Download CSV from Google Sheets
         id: csv
         run: |
-            CSV_DATA=$(curl -s "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
+            CSV_DATA=$(curl -Ss "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
             print $CSV_DATA
             # Convert the multi-line CSV data to an array of lines
             IFS=$'\n'
