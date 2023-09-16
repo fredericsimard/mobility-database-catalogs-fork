@@ -85,7 +85,7 @@ jobs:
         id: csv
         run: |
             CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
-            # echo $CSV_DATA
+            echo $CSV_DATA
             echo 1
             # Convert the multi-line CSV data to an array of lines
             IFS=$'\n'
