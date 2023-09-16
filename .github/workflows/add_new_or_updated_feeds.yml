@@ -50,14 +50,7 @@ jobs:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
             SECRET: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/zmccajmekpljwy5udft22g5iby/credential"
             CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
-            # Test
             # op://<vault>/<item>[/<section>]/<field>  — Or right-click on the field and select copy secret reference
-
-      - name: Set up Git
-        id: git-setup
-        run: |
-            git config user.name ${{ env.USERNAME }}
-            git config user.email ${{ env.USERNAME_EMAIL }}
 
       - name: Checkout repo
         id: checkout_repo
@@ -66,6 +59,12 @@ jobs:
             ref: master
             fetch-depth: 0
             token: ${{ env.CREDENTIALS }} 
+
+      - name: Set up Git
+        id: git-setup
+        run: |
+            git config user.name ${{ env.USERNAME }}
+            git config user.email ${{ env.USERNAME_EMAIL }}
 
       - name: Setup Python
         uses: actions/setup-python@v4.7.0
