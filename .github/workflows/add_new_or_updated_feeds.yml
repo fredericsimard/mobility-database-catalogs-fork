@@ -82,12 +82,12 @@ jobs:
             CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
 
             IFS=$'\n'
-            
+            csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
             declare -a csv_lines
 
             while IFS= read -r line; do
                 csv_lines+=("$line")
-            done <<< "$CSV_DATA"
+            done <<< "$csv_data_no_headers"
 
             echo "CSVLINES=$csv_lines" >> $GITHUB_OUTPUT
             
