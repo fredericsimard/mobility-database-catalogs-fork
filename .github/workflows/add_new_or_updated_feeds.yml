@@ -89,7 +89,7 @@ jobs:
                 csv_lines+=("$line")
             done <<< "$CSV_DATA"
 
-            echo "CSV_LINES=${csv_lines}" >> $GITHUB_ENV
+            echo "CSVLINES=${csv_lines}" >> $GITHUB_OUTPUT
             
             # for line in "${csv_lines[@]}"; do
             #     echo "CSV_LINE: ${line}"
@@ -118,7 +118,8 @@ jobs:
                 echo "$formatted_date"
             }
 
-            lines=${{ env.CSV_LINES }}
+            lines=${{ steps.id.outputs.CSVLINES }}
+
             for line in "${lines[@]}"; do
                 IFS=','
 
