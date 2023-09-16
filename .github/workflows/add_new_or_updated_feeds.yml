@@ -120,8 +120,67 @@ jobs:
 
             lines=${{ env.CSV_LINES }}
             for line in "${lines[@]}"; do
-                IFS=',' read -r timestamp provider regioncity currenturl updatednewsourceurl datatype1 issuetype downloadurl country subdivision_name municipality name yournameorg license_url tripupdatesurl servicealertsurl genunknownrturl authentication_type
-                
+                IFS=','
+
+                read -ra items_array <<< "$line"
+
+                timestamp="${items_array[0]}"
+                provider="${items_array[1]}"
+                regioncity="${items_array[2]}"
+                currenturl="${items_array[3]}"
+                updatednewsourceurl="${items_array[4]}"
+                datatype1="${items_array[5]}"
+                request="${items_array[6]}"
+                downloadurl="${items_array[7]}"
+                country="${items_array[8]}"
+                subdivision_name="${items_array[9]}"
+                municipality="${items_array[10]}"
+                name="${items_array[11]}"
+                yournameorg="${items_array[12]}"
+                license_url="${items_array[13]}"
+                tripupdatesurl="${items_array[14]}"
+                servicealertsurl="${items_array[15]}"
+                genunknownrturl="${items_array[16]}"
+                authentication_type="${items_array[17]}"
+
+                authentication_info_url="${items_array[18]}"
+                api_key_parameter_name="${items_array[19]}"
+                note="${items_array[20]}"
+                gtfsschedulefeatures="${items_array[21]}"
+                gtfsschedulestatus="${items_array[22]}"
+                gtfsrealtimestatus="${items_array[23]}"
+                realtimefeatures="${items_array[26]}"
+
+                # case timestamp               = 0
+                # case provider                = 1
+                # case regioncity              = 2
+                # case currenturl              = 3
+                # case updatednewsourceurl     = 4
+                # case datatype1               = 5
+                # case request                 = 6
+                # case downloadurl             = 7
+                # case country                 = 8
+                # case subdivision_name        = 9
+                # case municipality            = 10
+                # case name                    = 11
+                # case yournameorg             = 12
+                # case license_url             = 13
+                # case tripupdatesurl          = 14
+                # case servicealertsurl        = 15
+                # case genunknownrturl         = 16
+                # case authentication_type     = 17
+                # case authentication_info_url = 18
+                # case api_key_parameter_name  = 19
+                # case note                    = 20
+                # case gtfsschedulefeatures    = 21
+                # case gtfsschedulestatus      = 22
+                # case gtfsrealtimestatus      = 23
+                # case youremail               = 24
+                # case dataproduceremail       = 25
+                # case realtimefeatures        = 26
+                # case isocountrycode          = 27
+                # case feedupdatestatus        = 28
+
                 # We need to extract a date from the first column to test against today's date.
                 DATE_FROM_CSV=$(extract_date $timestamp)
 
