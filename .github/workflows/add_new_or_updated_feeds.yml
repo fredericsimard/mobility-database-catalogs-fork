@@ -74,24 +74,24 @@ jobs:
         with:
           python-version: '3.11' # install the python version needed
 
-      - name: Download CSV from Google Sheets
-        id: download_csv
-        shell: bash
-        run: |
-            # set -x
-            CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
+    #   - name: Download CSV from Google Sheets
+    #     id: download_csv
+    #     shell: bash
+    #     run: |
+    #         # set -x
+    #         CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
 
-            IFS=$'\n'
-            csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
-            declare -a csv_lines
+    #         IFS=$'\n'
+    #         csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
+    #         declare -a csv_lines
 
-            while IFS= read -r line; do
-                csv_lines+=("$line")
-            done <<< "$csv_data_no_headers"
+    #         while IFS= read -r line; do
+    #             csv_lines+=("$line")
+    #         done <<< "$csv_data_no_headers"
 
-            echo "CSVLINES=$csv_lines" >> $GITHUB_OUTPUT
+    #         echo "CSVLINES=$csv_lines" >> $GITHUB_OUTPUT
             
-            # set +x  # Disable debugging
+    #         # set +x  # Disable debugging
 
       - name: Process each lines
         id: process-csv
@@ -116,9 +116,19 @@ jobs:
                 echo "$formatted_date"
             }
 
-            lines=$(echo "${{ steps.download_csv.outputs.CSVLINES }}" | jq -r .)
+            CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
 
-            for line in "${lines}[@]"; do
+            IFS=$'\n'
+            csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
+            declare -a csv_lines
+
+            while IFS= read -r line; do
+                csv_lines+=("$line")
+            done <<< "$csv_data_no_headers"
+
+            # lines=$(echo "${{ steps.download_csv.outputs.CSVLINES }}" | jq -r .)
+
+            for line in "${csv_lines}[@]"; do
                 IFS=','
 
                 read -ra items_array <<< "$line"
