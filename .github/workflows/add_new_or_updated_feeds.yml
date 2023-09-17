@@ -124,7 +124,7 @@ jobs:
 
             while IFS= read -r line; do
                 extracted_date=$(extract_date "$line")
-                if [[ "$extracted_date" == "$today_date" ]]; then
+                if [[ "$extracted_date" == "${{ env.TODAYS_DATE }}" ]]; then
                     csv_lines+=("$line")
                 fi
             done <<< "$csv_data_no_headers"
