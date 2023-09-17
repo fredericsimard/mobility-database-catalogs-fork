@@ -242,6 +242,12 @@ jobs:
             echo "PYTHON_SCRIPT_ARGS=${PYTHON_SCRIPT_ARGS}" >> $GITHUB_OUTPUT
             # set +x
 
+      - name: Create new branch
+        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
+        shell: bash
+        run: |
+            git checkout -b "${{ env.BRANCH }}"
+
       - name: Install python packages
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
@@ -260,6 +266,13 @@ jobs:
           pip install virtualenv
           pip install gtfs_kit
           pip install unidecode
+
+      - name: Commit
+        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
+        shell: bash
+        run: |
+          git commit -m "Automated commit — New/Updated feed"
+          git push origin "${{ env.BRANCH }}"
 
       - name: Run Python Script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
