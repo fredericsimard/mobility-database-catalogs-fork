@@ -123,7 +123,10 @@ jobs:
             declare -a csv_lines
 
             while IFS= read -r line; do
-                csv_lines+=("$line")
+                extracted_date=$(extract_date "$line")
+                if [[ "$extracted_date" == "$today_date" ]]; then
+                    csv_lines+=("$line")
+                fi
             done <<< "$csv_data_no_headers"
 
             # lines=$(echo "${{ steps.download_csv.outputs.CSVLINES }}" | jq -r .)
