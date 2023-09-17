@@ -271,6 +271,7 @@ jobs:
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         run: |
+          git add .
           git commit -m "Automated commit — New/Updated feed"
           git push origin "${{ env.BRANCH }}"
 
