@@ -282,7 +282,7 @@ jobs:
             title: "new JSON"
             commit-message: "New JSON"
             body: "body"
-            author: ${{ env.USERNAME_EMAIL }}
+            author: "${{ env.USERNAME }} <${{ env.USERNAME_EMAIL }}>"
             reviewers: ${{ env.REVIEWERS_JSON }}
             branch: ${{ env.BRANCH }}
             base: ${{ env.BASE }}
