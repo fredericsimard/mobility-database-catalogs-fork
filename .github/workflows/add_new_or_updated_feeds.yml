@@ -180,38 +180,14 @@ jobs:
                             if [[ $datatype1 = *"Schedule"* ]]
                             then # add_gtfs_schedule_source
 
-                                PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(\
-                                provider=\"$provider\", \
-                                country_code=\"$country\", \
-                                direct_download_url=\"$tripupdatesurl\", \
-                                authentication_type=\"$authentication_type\", \
-                                authentication_info_url=\"$authentication_info_url\", \
-                                api_key_parameter_name=\"$api_key_parameter_name\", \
-                                subdivision_name=\"$subdivision_name\", \
-                                municipality=\"$municipality\", \
-                                license_url=\"$license_url\", \
-                                name=\"$name\", \
-                                status=\"$status1\", \
-                                features=\"$features1\")"
+                                PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider=\"$provider\", country_code=\"$country\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", subdivision_name=\"$subdivision_name\", municipality=\"$municipality\", license_url=\"$license_url\", name=\"$name\", status=\"$status1\", features=\"$features1\")"
 
                             elif [[ $datatype1 = *"Realtime"* ]]
                             then # add_gtfs_realtime_source
                                 # Emma: entity_type matches the realtime Data type options of Vehicle Positions, Trip Updates, or Service Alerts.
                                 # If one of those three are selected, add it. If not, omit it.
 
-                                PYTHON_SCRIPT_ARGS="add_gtfs_realtime_source(\
-                                entity_type=\"$datatype1\", \
-                                provider=\"$provider\", \
-                                direct_download_url=\"$tripupdatesurl\", \
-                                authentication_type=\"$authentication_type\", \
-                                authentication_info_url=\"$authentication_info_url\", \
-                                api_key_parameter_name=\"$api_key_parameter_name\", \
-                                license_url=\"$license_url\", \
-                                name=\"$name\", \
-                                static_reference=\"\", \
-                                note=\"$note\", \
-                                status=\"$status2\", \
-                                features=\"$features2\")"
+                                PYTHON_SCRIPT_ARGS="add_gtfs_realtime_source(entity_type=\"$datatype1\", provider=\"$provider\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", name=\"$name\", static_reference=\"\", note=\"$note\", status=\"$status2\", features=\"$features2\")"
                             fi
 
                         elif [[ $issuetype = "Source update" ]]
@@ -221,38 +197,12 @@ jobs:
                             if [[ $datatype1 = *"Schedule"* ]]
                             then # update_gtfs_schedule_source
 
-                                PYTHON_SCRIPT_ARGS="update_gtfs_schedule_source(\
-                                mdb_source_id=\"\", \
-                                provider=\"$provider\", \
-                                name=\"$name\", \
-                                country_code=\"$country\", \
-                                subdivision_name=\"$subdivision_name\", \
-                                municipality=\"$municipality\", \
-                                direct_download_url=\"$tripupdatesurl\", \
-                                authentication_type=\"$authentication_type\", \
-                                authentication_info_url=\"$authentication_info_url\", \
-                                api_key_parameter_name=\"$api_key_parameter_name\", \
-                                license_url=\"$license_url\", \
-                                status=\"$status1\", \
-                                features=\"$features1\")"
+                                PYTHON_SCRIPT_ARGS="update_gtfs_schedule_source(mdb_source_id=\"\", provider=\"$provider\", name=\"$name\", country_code=\"$country\", subdivision_name=\"$subdivision_name\", municipality=\"$municipality\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", status=\"$status1\", features=\"$features1\")"
 
                             elif [[ $datatype1 = *"Realtime"* ]]
                             then # update_gtfs_realtime_source
 
-                                PYTHON_SCRIPT_ARGS="update_gtfs_realtime_source(\
-                                mdb_source_id=\"\", \
-                                entity_type=\"$datatype1\", \
-                                provider=\"$provider\", \
-                                direct_download_url=\"$tripupdatesurl\", \
-                                authentication_type=\"$authentication_type\", \
-                                authentication_info_url=\"$authentication_info_url\", \
-                                api_key_parameter_name=\"$api_key_parameter_name\", \
-                                license_url=\"$license_url\", \
-                                name=\"$name\", \
-                                static_reference=\"TO_BE_PROVIDED\", \
-                                note=\"$note\", \
-                                status=\"$status2\", \
-                                features=\"$features2\")"
+                                PYTHON_SCRIPT_ARGS="update_gtfs_realtime_source(mdb_source_id=\"\", entity_type=\"$datatype1\", provider=\"$provider\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", name=\"$name\", static_reference=\"TO_BE_PROVIDED\", note=\"$note\", status=\"$status2\", features=\"$features2\")"
 
                             fi
 
@@ -265,57 +215,19 @@ jobs:
                                 if [[ $datatype1 = *"Schedule"* ]]
                                 then # update_gtfs_schedule_source
 
-                                    PYTHON_SCRIPT_ARGS="update_gtfs_schedule_source(\
-                                    mdb_source_id=\"\", \
-                                    provider=\"$provider\", \
-                                    name=\"**** Requested for removal ****\", \
-                                    country_code=\"$country\", \
-                                    subdivision_name=\"$subdivision_name\", \
-                                    municipality=\"$municipality\", \
-                                    direct_download_url=\"$tripupdatesurl\", \
-                                    authentication_type=\"$authentication_type\", \
-                                    authentication_info_url=\"$authentication_info_url\", \
-                                    api_key_parameter_name=\"$api_key_parameter_name\", \
-                                    license_url=\"$license_url\", \
-                                    status=\"$status1\", \
-                                    features=\"$features1\")"
+                                    PYTHON_SCRIPT_ARGS="update_gtfs_schedule_source(mdb_source_id=\"\", provider=\"$provider\", name=\"**** Requested for removal ****\", country_code=\"$country\", subdivision_name=\"$subdivision_name\", municipality=\"$municipality\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", status=\"$status1\", features=\"$features1\")"
 
                                 elif [[ $datatype1 = *"Realtime"* ]]
                                 then # update_gtfs_realtime_source
 
-                                    PYTHON_SCRIPT_ARGS="update_gtfs_realtime_source(\
-                                    mdb_source_id=\"\", \
-                                    entity_type=\"$datatype1\", \
-                                    provider=\"$provider\", \
-                                    direct_download_url=\"$tripupdatesurl\", \
-                                    authentication_type=\"$authentication_type\", \
-                                    authentication_info_url=\"$authentication_info_url\", \
-                                    api_key_parameter_name=\"$api_key_parameter_name\", \
-                                    license_url=\"$license_url\", \
-                                    name=\"**** Requested for removal ****\", \
-                                    static_reference=\"TO_BE_PROVIDED\", \
-                                    note=\"$note\", \
-                                    status=\"$status2\", \
-                                    features=\"$features2\")"
+                                    PYTHON_SCRIPT_ARGS="update_gtfs_realtime_source(mdb_source_id=\"\", entity_type=\"$datatype1\", provider=\"$provider\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", name=\"**** Requested for removal ****\", static_reference=\"TO_BE_PROVIDED\", note=\"$note\", status=\"$status2\", features=\"$features2\")"
 
                                 fi
 
                         else # ... assume this is a new source by default :: add_gtfs_schedule_source
                             echo -e "   ASSUMING DEFAULT, NEW SOURCE"
 
-                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(\
-                            provider=\"$provider\", \
-                            country_code=\"$country\", \
-                            direct_download_url=\"$tripupdatesurl\", \
-                            authentication_type=\"$authentication_type\", \
-                            authentication_info_url=\"$authentication_info_url\", \
-                            api_key_parameter_name=\"$api_key_parameter_name\", \
-                            subdivision_name=\"$subdivision_name\", \
-                            municipality=\"$municipality\", \
-                            license_url=\"$license_url\", \
-                            name=\"$name\", \
-                            status=\"$status1\", \
-                            features=\"$features1\")"
+                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider=\"$provider\", country_code=\"$country\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", subdivision_name=\"$subdivision_name\", municipality=\"$municipality\", license_url=\"$license_url\", name=\"$name\", status=\"$status1\", features=\"$features1\")"
 
                         fi
 
