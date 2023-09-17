@@ -15,6 +15,7 @@ env:
     #ACCESS_TOKEN: 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 # The access token associated with the USERNAME above, should have "repo" scope to access the repositories. See "CREATE_PR_FOR_MB_CATALOG_AUTOMATION" in 1Password, Public Transit vault.
     ORGANIZATION: MobilityData # organization name
     REPO: mobity-database-catalogs # repository name
+    BASE: "main"
     REVIEWERS_JSON: "[\"emmambd\"]" # List of GitHub usernames of the reviewers, in a JSON array : ["username1", "username2"]
     
     PYTHON_SCRIPT_PATH: "tools/operations.py" # full path of where the Python script is located.
@@ -266,6 +267,27 @@ jobs:
         run: |
           python -c "from tools.operations import *"
           python -c "\"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
+
+      - uses: actions/checkout@v3
+      - name: Create commits
+        run: |
+            git commit -am "Modify tracked file during workflow"
+            git add *
+            git commit -m "Add untracked file during workflow"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5.0.2
+        with:
+            token: ${{ env.CREDENTIALS }}
+            title: "new JSON"
+            commit-message: "New JSON"
+            body: "body"
+            author: ${{ env.USERNAME_EMAIL }}
+            reviewers: ${{ env.REVIEWERS_JSON }}
+            branch: ${{ env.BRANCH }}
+            base: ${{ env.BASE }}
+            add-paths: |
+                catalogs/sources/gtfs/*.json
 
     #   - name: Deactivate virtual environment
     #     shell: bash
