@@ -128,7 +128,7 @@ jobs:
 
             # lines=$(echo "${{ steps.download_csv.outputs.CSVLINES }}" | jq -r .)
 
-            for line in "${csv_lines}[@]"; do
+            for line in $csv_lines[@]; do
                 IFS=','
 
                 read -ra items_array <<< "$line"
