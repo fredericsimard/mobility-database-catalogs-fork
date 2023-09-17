@@ -265,7 +265,7 @@ jobs:
         shell: bash
         run: |
           python -c "from tools.operations import *"
-          python -c "${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
+          python -c "\"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
 
     #   - name: Deactivate virtual environment
     #     shell: bash
