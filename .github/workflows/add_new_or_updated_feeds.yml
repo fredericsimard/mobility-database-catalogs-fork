@@ -97,7 +97,7 @@ jobs:
         id: process-csv
         shell: bash
         run: |
-            set -x
+            # set -x
             # function to extract a date in the proper format for this script.
             extract_date() {
                 # USAGE : date=$(extract_date "7/5/2023 15:50:58")
@@ -239,13 +239,13 @@ jobs:
             done # end loop
 
             echo "PYTHON_SCRIPT_ARGS=${PYTHON_SCRIPT_ARGS}" >> $GITHUB_OUTPUT
-            set +x
+            # set +x
 
       - name: Install python packages
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         run: |
-            python -m pip install --upgrade pip
+            # python -m pip install --upgrade pip
             pip install virtualenv --quiet
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
@@ -264,7 +264,8 @@ jobs:
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         run: |
-          python -c "from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
+          python -c "from tools.operations import *"
+          python -c "${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
 
     #   - name: Deactivate virtual environment
     #     shell: bash
