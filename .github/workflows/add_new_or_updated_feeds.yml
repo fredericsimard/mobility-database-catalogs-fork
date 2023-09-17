@@ -93,7 +93,7 @@ jobs:
             
     #         # set +x  # Disable debugging
 
-      - name: Process each lines
+      - name: Download CSV and process each lines
         id: process-csv
         shell: bash
         run: |
