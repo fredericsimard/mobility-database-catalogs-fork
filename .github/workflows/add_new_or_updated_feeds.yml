@@ -97,7 +97,7 @@ jobs:
         id: process-csv
         shell: bash
         run: |
-            # set -x
+            set -x
             # function to extract a date in the proper format for this script.
             extract_date() {
                 # USAGE : date=$(extract_date "7/5/2023 15:50:58")
@@ -314,7 +314,7 @@ jobs:
             done # end loop
 
             echo "PYTHON_SCRIPT_ARGS=${PYTHON_SCRIPT_ARGS}" >> $GITHUB_OUTPUT
-            #set +x
+            set +x
 
       - name: Install python packages
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
