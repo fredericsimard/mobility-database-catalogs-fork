@@ -95,6 +95,7 @@ jobs:
 
       - name: Process each lines
         id: process-csv
+        shell: bash
         run: |
             # set -x
             # function to extract a date in the proper format for this script.
@@ -340,7 +341,7 @@ jobs:
         run: |
           python -c "from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
 
-      - name: Deactivate virtual environment
-        shell: bash
-        run: |
-          deactivate
+    #   - name: Deactivate virtual environment
+    #     shell: bash
+    #     run: |
+    #       deactivate
