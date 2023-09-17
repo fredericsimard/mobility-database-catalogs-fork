@@ -268,12 +268,12 @@ jobs:
           python -c "from tools.operations import *"
           python -c "\"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
 
-      - uses: actions/checkout@v3
-      - name: Create commits
-        run: |
-            git commit -am "Modify tracked file during workflow"
-            git add *
-            git commit -m "Add untracked file during workflow"
+    #   - uses: actions/checkout@v3
+    #   - name: Create commits
+    #     run: |
+    #         git commit -am "Modify tracked file during workflow"
+    #         git add *
+    #         git commit -m "Add untracked file during workflow"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.2
