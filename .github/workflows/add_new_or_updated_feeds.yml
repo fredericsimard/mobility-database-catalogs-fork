@@ -261,26 +261,18 @@ jobs:
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         run: |
-          python -m venv env
-          source env/bin/activate
-          pip install virtualenv
-          pip install gtfs_kit
-          pip install unidecode
-
-      - name: Commit
-        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-        shell: bash
-        run: |
-          git add .
-          git commit -m "Automated commit — New/Updated feed"
-          git push origin "${{ env.BRANCH }}"
+            python -m venv env
+            source env/bin/activate
+            pip install virtualenv
+            pip install gtfs_kit
+            pip install unidecode
 
       - name: Run Python Script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         run: |
-          python -c "from tools.operations import *"
-          python -c "\"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
+            python -c "from tools.operations import *"
+            python -c "\"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
 
     #   - uses: actions/checkout@v3
     #   - name: Create commits
@@ -288,6 +280,14 @@ jobs:
     #         git commit -am "Modify tracked file during workflow"
     #         git add *
     #         git commit -m "Add untracked file during workflow"
+
+      - name: Commit
+        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
+        shell: bash
+        run: |
+            git add .
+            git commit -m "Automated commit — New/Updated feed"
+            git push origin "${{ env.BRANCH }}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.2
