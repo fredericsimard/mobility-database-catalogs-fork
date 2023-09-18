@@ -268,7 +268,7 @@ jobs:
             pip install virtualenv --quiet
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
-            cd tools/
+            cd /home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork
             echo "$PWD"
 
       - name: Run Python Script
@@ -278,7 +278,7 @@ jobs:
             script: |
                 import sys
                 sys.path.append('/home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork/tools')
-                from operations import *
+                from tools.operations import *
                 ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
 
       - name: Commit
