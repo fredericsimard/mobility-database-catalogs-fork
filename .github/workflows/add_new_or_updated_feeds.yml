@@ -228,7 +228,7 @@ jobs:
                         else # ... assume this is a new source by default :: add_gtfs_schedule_source
                             echo -e "   ASSUMING DEFAULT, NEW SOURCE"
 
-                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider='${provider}', country_code='${country}', direct_download_url='${tripupdatesurl}', authentication_type='${authentication_type}', authentication_info_url='${authentication_info_url}', api_key_parameter_name='${api_key_parameter_name}', subdivision_name='${subdivision_name}', municipality='${municipality}', license_url='${license_url}', name='${name}', status='${status1}', features='${features1}')"
+                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${tripupdatesurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, subdivision_name=${subdivision_name}, municipality=${municipality}, license_url=${license_url}, name=${name}, status=${status1}, features=${features1})"
 
                         fi
 
@@ -264,9 +264,9 @@ jobs:
         run: |
             python -m venv env
             source env/bin/activate
-            pip install virtualenv
-            pip install gtfs_kit
-            pip install unidecode
+            pip install virtualenv --quiet
+            pip install gtfs_kit --quiet
+            pip install unidecode --quiet
 
       - name: Run Python Script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
