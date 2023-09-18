@@ -260,7 +260,7 @@ jobs:
     #         pip install gtfs_kit --quiet
     #         pip install unidecode --quiet
 
-      - name: Create and activate a Python virtual environment
+      - name: Create & activate a Python virtual env & run the script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         env:
           PYTHONPATH: ${{ github.workspace }}/tools
@@ -273,17 +273,6 @@ jobs:
             pip install unidecode --quiet
             echo "PYTHONPATH=${PYTHONPATH}"
             python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
-      #      cd /home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork
-      #      echo "$PWD"
-
-    #   - name: Run Python Script
-    #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-    #     env:
-    #       PYTHONPATH: ${{ github.workspace }}/tools
-    #     shell: bash
-    #     run: |
-    #         echo "PYTHONPATH=${PYTHONPATH}"
-    #         python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
 
     #   - name: Run Python Script
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
