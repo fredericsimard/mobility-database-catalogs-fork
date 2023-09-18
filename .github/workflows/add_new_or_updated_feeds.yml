@@ -278,7 +278,7 @@ jobs:
             script: |
                 import sys
                 sys.path.append('/home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork/tools')
-                from tools.operations import *
+                from operations import *
                 ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
 
       - name: Commit
