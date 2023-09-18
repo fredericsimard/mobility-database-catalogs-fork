@@ -247,6 +247,7 @@ jobs:
         shell: bash
         run: |
             git checkout -b "${{ env.BRANCH }}"
+            chmod 755 -R $PWD
             ls -lags
             echo "$PWD"
 
@@ -277,6 +278,7 @@ jobs:
         with:
             script: |
                 import sys
+                print(sys.path)
                 sys.path.append('/home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork/tools')
                 current_working_directory = os.getcwd()
                 print(current_working_directory)
