@@ -274,16 +274,24 @@ jobs:
 
       - name: Run Python Script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-        uses: jannekem/run-python-script-action@v1.6
-        with:
-            script: |
-                import sys
-                print(sys.path)
-                sys.path.append('/home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork/tools')
-                current_working_directory = os.getcwd()
-                print(current_working_directory)
-                from tools.operations import *
-                ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools
+        shell: bash
+        run: |
+            python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+
+    #   - name: Run Python Script
+    #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
+    #     uses: jannekem/run-python-script-action@v1.6
+    #     with:
+    #         script: |
+    #             import sys
+    #             print(sys.path)
+    #             sys.path.append('/home/runner/work/mobility-database-catalogs-fork/mobility-database-catalogs-fork/tools')
+    #             current_working_directory = os.getcwd()
+    #             print(current_working_directory)
+    #             from tools.operations import *
+    #             ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
 
       # python -c 'from foo import *; print hello()'
 
