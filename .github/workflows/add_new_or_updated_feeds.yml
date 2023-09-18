@@ -247,6 +247,7 @@ jobs:
         shell: bash
         run: |
             git checkout -b "${{ env.BRANCH }}"
+            ls -lags
             cd tools/
             echo "$PWD"
 
@@ -282,6 +283,8 @@ jobs:
                 print(current_working_directory)
                 from tools.operations import *
                 ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
+
+      # python -c 'from foo import *; print hello()'
 
       - name: Commit
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
