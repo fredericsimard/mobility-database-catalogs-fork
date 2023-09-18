@@ -273,7 +273,7 @@ jobs:
         shell: bash
         run: |
             python -c "from tools.operations import *"
-            python -c "\"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
+            python -c "\"${{ env.PYTHON_SCRIPT_PATH }} ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
 
     #   - uses: actions/checkout@v3
     #   - name: Create commits
