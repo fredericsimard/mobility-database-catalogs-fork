@@ -247,6 +247,7 @@ jobs:
         shell: bash
         run: |
             git checkout -b "${{ env.BRANCH }}"
+            cd tools/
 
       - name: Install python packages
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
