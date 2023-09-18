@@ -278,7 +278,9 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}/tools
         shell: bash
         run: |
-            python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+            echo "PYTHONPATH=${PYTHONPATH}"
+            python -c 'from tools.operations import *'
+            python -c '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
 
     #   - name: Run Python Script
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
