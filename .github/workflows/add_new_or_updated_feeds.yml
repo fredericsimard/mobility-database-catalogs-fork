@@ -270,17 +270,11 @@ jobs:
 
       - name: Run Python Script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-        shell: bash
-        run: |
-            python -c "from tools.operations import *"
-            python -c "${{ env.PYTHON_SCRIPT_PATH }} \"${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}\""
-
-    #   - uses: actions/checkout@v3
-    #   - name: Create commits
-    #     run: |
-    #         git commit -am "Modify tracked file during workflow"
-    #         git add *
-    #         git commit -m "Add untracked file during workflow"
+        uses: jannekem/run-python-script-action@v1.6
+        with:
+            script: |
+                from tools.operations import *
+                ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
 
       - name: Commit
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
