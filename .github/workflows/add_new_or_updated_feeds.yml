@@ -273,6 +273,8 @@ jobs:
         uses: jannekem/run-python-script-action@v1.6
         with:
             script: |
+                import sys
+                sys.path.append('/tools')
                 from tools.operations import *
                 ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}
 
