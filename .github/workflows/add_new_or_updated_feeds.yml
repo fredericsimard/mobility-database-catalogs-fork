@@ -274,7 +274,7 @@ jobs:
             pip install unidecode --quiet
             echo "PYTHONPATH=${PYTHONPATH}"
             echo "PYTHONIOENCODING=${PYTHONIOENCODING}"
-            python -c 'from tools.operations import *'
+            python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
 
     #   - name: Run Python Script
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
