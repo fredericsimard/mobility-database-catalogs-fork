@@ -264,6 +264,7 @@ jobs:
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         env:
           PYTHONPATH: ${{ github.workspace }}/tools
+          PYTHONIOENCODING: "utf8"
         shell: bash
         run: |
             python -m venv env
@@ -272,7 +273,7 @@ jobs:
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
             echo "PYTHONPATH=${PYTHONPATH}"
-            python -c 'import sys; sys.setdefaultencoding('UTF8'); from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+            python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
 
     #   - name: Run Python Script
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
