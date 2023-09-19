@@ -248,8 +248,8 @@ jobs:
         run: |
             git checkout -b "${{ env.BRANCH }}"
             chmod 755 -R $PWD
-            ls -lags
-            echo "$PWD"
+            # ls -lags
+            # echo "$PWD"
 
     #   - name: Install python packages
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
@@ -274,7 +274,7 @@ jobs:
             pip install unidecode --quiet
             echo "PYTHONPATH=${PYTHONPATH}"
             echo "PYTHONIOENCODING=${PYTHONIOENCODING}"
-            python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+            python -c 'from tools.operations import *'
 
     #   - name: Run Python Script
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
