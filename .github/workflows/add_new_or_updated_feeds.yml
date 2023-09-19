@@ -272,7 +272,7 @@ jobs:
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
             echo "PYTHONPATH=${PYTHONPATH}"
-            python -c 'import sys; reload(sys); sys.setdefaultencoding('UTF8'); from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+            python -c 'import sys; sys.setdefaultencoding('UTF8'); from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
 
     #   - name: Run Python Script
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
