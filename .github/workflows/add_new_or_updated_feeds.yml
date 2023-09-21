@@ -56,6 +56,12 @@ jobs:
             CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
             # op://<vault>/<item>[/<section>]/<field>  — Or right-click on the field and select copy secret reference
 
+      - name: Set up Git
+        id: git-setup
+        run: |
+            git config user.name ${{ env.USERNAME }}
+            git config user.email ${{ env.USERNAME_EMAIL }}
+
       - name: Checkout repo
         id: checkout_repo
         uses: actions/checkout@v4
@@ -64,14 +70,7 @@ jobs:
             fetch-depth: 0
             token: ${{ env.CREDENTIALS }} 
 
-      - name: Set up Git
-        id: git-setup
-        run: |
-            git config user.name ${{ env.USERNAME }}
-            git config user.email ${{ env.USERNAME_EMAIL }}
-
       - name: Create new branch
-        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         run: |
             git checkout -b "${{ env.BRANCH }}"
