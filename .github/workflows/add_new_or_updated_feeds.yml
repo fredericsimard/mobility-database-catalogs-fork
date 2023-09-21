@@ -11,7 +11,7 @@ on:
 env:
     CSV_URL: "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv"
     
-    DATE_FORMAT: "[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}" # this is the format we need to compare dates between the CSV and the local system.
+    DATE_FORMAT: "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}" # this is the format we need to compare dates between the CSV and the local system.
     
     USERNAME: "github-actions[bot]" # GitHub username that will create the PR
     USERNAME_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
