@@ -76,7 +76,7 @@ jobs:
             git checkout -b ${{ steps.create_branch_name.outputs.BRANCH }}
             chmod 755 -R $PWD
             git reset --hard ${{ env.BASE }}
-            git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
+            # git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
             # git status
             # git log
             # ls -lags
@@ -257,6 +257,7 @@ jobs:
         uses: EndBug/add-and-commit@v9.1.3
         with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
+            new_branch: ${{ steps.create_branch_name.outputs.BRANCH }}
             committer_name: ${{ env.USERNAME }}
             committer_email: ${{ env.USERNAME_EMAIL }}
             message: "Automated commit — New/Updated feed"
