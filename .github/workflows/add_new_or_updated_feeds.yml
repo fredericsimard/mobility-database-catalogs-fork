@@ -264,7 +264,7 @@ jobs:
             committer_name: ${{ env.USERNAME }}
             committer_email: ${{ env.USERNAME_EMAIL }}
             message: "Automated commit — New/Updated feed"
-            add: 'catalogs/sources/.'
+            # add: 'catalogs/sources/.'
 
     #   - name: Commit
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
