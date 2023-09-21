@@ -255,13 +255,13 @@ jobs:
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
         run: |
             git config user.name ${{ env.USERNAME }}
             git config user.email ${{ env.USERNAME_EMAIL }}
-            git status
             git add catalogs/sources/.
             git commit -m "Automated commit — New/Updated feed"
+            git status
             git push --set-upstream origin "${{ steps.create_branch_name.outputs.BRANCH }}"
 
       - name: Create Pull Request
