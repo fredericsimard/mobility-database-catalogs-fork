@@ -95,6 +95,8 @@ jobs:
             csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
             declare -a csv_lines
 
+            echo "csv_data_no_headers : ${csv_data_no_headers}"
+
             # Filter out the lines that haven't been added in the last 24h
             while IFS= read -r line; do
                 extracted_date=$(extract_date "$line")
