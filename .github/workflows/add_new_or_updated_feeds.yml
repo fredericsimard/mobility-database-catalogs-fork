@@ -283,7 +283,7 @@ jobs:
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         uses: peter-evans/create-pull-request@v5.0.2
         with:
-            token: ${{ env.CREDENTIALS }}
+            token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }} # ${{ env.CREDENTIALS }}
             title: "new JSON"
             commit-message: "New JSON"
             body: "body"
@@ -292,7 +292,7 @@ jobs:
             branch: ${{ steps.create_branch_name.outputs.BRANCH }}
             base: ${{ env.BASE }}
             add-paths: |
-                catalogs/sources/gtfs/*.json
+                catalogs/sources/*
 
     #   - name: Deactivate virtual environment
     #     shell: bash
