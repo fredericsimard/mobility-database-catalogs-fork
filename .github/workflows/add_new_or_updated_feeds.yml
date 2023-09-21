@@ -290,10 +290,7 @@ jobs:
             author: "${{ env.USERNAME }} <${{ env.USERNAME_EMAIL }}>"
             reviewers: ${{ env.REVIEWERS_JSON }}
             branch: ${{ steps.create_branch_name.outputs.BRANCH }}
-            base: ${{ env.BASE }}
-            add-paths: |
-                catalogs/sources/gtfs/schedule/*.json
-                catalogs/sources/gtfs/realtime/*.json
+            # base: ${{ env.BASE }}
 
     #   - name: Deactivate virtual environment
     #     shell: bash
