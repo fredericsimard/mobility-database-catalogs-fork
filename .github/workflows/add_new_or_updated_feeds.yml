@@ -88,7 +88,7 @@ jobs:
             }
 
             # Download the CSV data from the Google Sheet
-            CSV_DATA=$(curl -sL ${{ env.CSV_URL }})
+            CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
 
             # Remove the header row, not needed.
             IFS=$'\n'
