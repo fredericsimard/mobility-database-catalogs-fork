@@ -110,12 +110,12 @@ jobs:
 
             # Cycle through the lines added in the last 24h
             for line in $csv_lines[@]; do
-                
-                echo "current line : ${line}"
 
                 IFS=','
 
                 read -ra items_array <<< "$line"
+                
+                echo "current line : ${items_array}"
 
                 timestamp="${items_array[0]}"
                 provider="${items_array[1]}"
