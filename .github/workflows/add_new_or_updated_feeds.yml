@@ -274,6 +274,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+            git status
+            git log
             # GITHUB_TOKEN
             # echo "$PWD"
             modified_files=$(git diff --name-status)
