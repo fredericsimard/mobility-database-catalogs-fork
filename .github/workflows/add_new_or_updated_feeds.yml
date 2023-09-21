@@ -231,6 +231,7 @@ jobs:
             # set +x
 
       - name: Setup Python
+        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         uses: actions/setup-python@v4.7.0
         with:
           python-version: '3.11' # install the python version needed
@@ -258,6 +259,8 @@ jobs:
         with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             new_branch: ${{ steps.create_branch_name.outputs.BRANCH }}
+            author_name: ${{ env.USERNAME }}
+            author_email: ${{ env.USERNAME_EMAIL }}
             committer_name: ${{ env.USERNAME }}
             committer_email: ${{ env.USERNAME_EMAIL }}
             message: "Automated commit — New/Updated feed"
@@ -277,6 +280,7 @@ jobs:
     #         git push --set-upstream origin "${{ steps.create_branch_name.outputs.BRANCH }}"
 
       - name: Create Pull Request
+        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         uses: peter-evans/create-pull-request@v5.0.2
         with:
             token: ${{ env.CREDENTIALS }}
