@@ -95,13 +95,13 @@ jobs:
             csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
             declare -a csv_lines
 
-            echo "csv_data_no_headers : ${csv_data_no_headers}"
+            # echo "csv_data_no_headers : ${csv_data_no_headers}"
 
             # Filter out the lines that haven't been added in the last 24h
-            while IFS= read -r line; do
-                extracted_date=$(extract_date "$line")
+            while IFS= read -r currentline; do
+                extracted_date=$(extract_date "$currentline")
                 if [[ "$extracted_date" == "${{ env.TODAYS_DATE }}" ]]; then
-                    csv_lines+=("$line")
+                    csv_lines+=("$currentline")
                 fi
             done <<< "$csv_data_no_headers"
 
@@ -111,13 +111,13 @@ jobs:
             PYTHON_SCRIPT_ARGS=""
 
             # Cycle through the lines added in the last 24h
-            for line in $csv_lines[@]; do
+            for cur_line in $csv_lines[@]; do
 
                 IFS=','
 
-                read -ra items_array <<< "$line"
+                read -ra items_array <<< "$cur_line"
                 
-                echo "current line : ${items_array}"
+                echo "current cur_line : ${items_array}"
 
                 timestamp="${items_array[0]}"
                 provider="${items_array[1]}"
@@ -245,8 +245,8 @@ jobs:
             echo "PYTHONPATH=${PYTHONPATH}"
             echo "PYTHONIOENCODING=${PYTHONIOENCODING}"
             IFS=$'\n'
-            while IFS= read -r line; do
-                python -c 'from tools.operations import *; ${line}'
+            while IFS= read -r current_line; do
+                python -c 'from tools.operations import *; ${current_line}'
             done <<< "${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
 
       - name: Commit & push
