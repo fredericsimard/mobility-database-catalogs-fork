@@ -60,7 +60,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
         with:
-            ref: main
+            ref: ${{ env.BASE }}
             fetch-depth: 0
             token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }} # ${{ env.CREDENTIALS }} 
 
@@ -290,7 +290,7 @@ jobs:
             author: "${{ env.USERNAME }} <${{ env.USERNAME_EMAIL }}>"
             reviewers: ${{ env.REVIEWERS_JSON }}
             branch: ${{ steps.create_branch_name.outputs.BRANCH }}
-            # base: ${{ env.BASE }}
+            base: ${{ env.BASE }}
 
     #   - name: Deactivate virtual environment
     #     shell: bash
