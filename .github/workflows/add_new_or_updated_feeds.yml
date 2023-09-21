@@ -62,7 +62,7 @@ jobs:
         with:
             ref: main
             fetch-depth: 0
-            token: ${{ env.CREDENTIALS }} 
+            token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }} # ${{ env.CREDENTIALS }} 
 
     #   - name: Set up Git
     #     id: git-setup
