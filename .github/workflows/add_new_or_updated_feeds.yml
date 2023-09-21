@@ -138,9 +138,6 @@ jobs:
                 gtfsrealtimestatus="${items_array[23]}"
                 realtimefeatures="${items_array[26]}"
 
-                # We need to extract a date from the first column to test against today's date.
-                DATE_FROM_CSV=$(extract_date $timestamp)
-
                 PYTHON_SCRIPT_ARGS_TEMP=""
 
                 echo -e "FOUND ONE ROW ADDED TODAY: $provider"
@@ -206,7 +203,9 @@ jobs:
 
                 fi
 
-                PYTHON_SCRIPT_ARGS="${PYTHON_SCRIPT_ARGS}${PYTHON_SCRIPT_ARGS}/n"
+                echo "PYTHON_SCRIPT_ARGS_TEMP : ${PYTHON_SCRIPT_ARGS_TEMP}"
+
+                PYTHON_SCRIPT_ARGS="${PYTHON_SCRIPT_ARGS}${PYTHON_SCRIPT_ARGS_TEMP}/n"
 
             done # end loop
 
