@@ -43,7 +43,7 @@ jobs:
       - name: Create branch name
         id: create_branch_name
         run: |
-            echo "BRANCH=\"${{ env.TODAYS_YEAR }}-${{ env.TODAYS_MONTH }}-${{ env.TODAYS_DAY }}\"" >> $GITHUB_ENV # Branch name
+            echo "BRANCH=\"${{ env.TODAYS_YEAR }}-${{ env.TODAYS_MONTH }}-${{ env.TODAYS_DAY }}\"" >> $GITHUB_OUTPUT # Branch name
 
       - name: Load secrets from 1Password
         id: onepw_secrets
@@ -73,8 +73,9 @@ jobs:
       - name: Create new branch
         shell: bash
         run: |
-            git checkout -b "${{ env.BRANCH }}"
+            git checkout -b "${{ steps.create_branch_name.outputs.BRANCH }}"
             chmod 755 -R $PWD
+            git reset --hard ${{ env.BASE }}
             git status
             git log
             # ls -lags
@@ -273,7 +274,7 @@ jobs:
 
             # git add ${{ github.workspace }}/catalogs/sources/gtfs/.
             git commit -m "Automated commit — New/Updated feed"
-            git push origin "${{ env.BRANCH }}"
+            git push origin "${{ steps.create_branch_name.outputs.BRANCH }}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.2
@@ -284,7 +285,7 @@ jobs:
             body: "body"
             author: "${{ env.USERNAME }} <${{ env.USERNAME_EMAIL }}>"
             reviewers: ${{ env.REVIEWERS_JSON }}
-            branch: ${{ env.BRANCH }}
+            branch: ${{ steps.create_branch_name.outputs.BRANCH }}
             base: ${{ env.BASE }}
             add-paths: |
                 catalogs/sources/gtfs/*.json
