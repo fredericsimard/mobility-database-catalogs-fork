@@ -64,11 +64,11 @@ jobs:
             fetch-depth: 0
             token: ${{ env.CREDENTIALS }} 
 
-      - name: Set up Git
-        id: git-setup
-        run: |
-            git config user.name ${{ env.USERNAME }}
-            git config user.email ${{ env.USERNAME_EMAIL }}
+    #   - name: Set up Git
+    #     id: git-setup
+    #     run: |
+    #         git config user.name ${{ env.USERNAME }}
+    #         git config user.email ${{ env.USERNAME_EMAIL }}
 
       - name: Create new branch
         shell: bash
@@ -76,8 +76,8 @@ jobs:
             git checkout -b "${{ steps.create_branch_name.outputs.BRANCH }}"
             chmod 755 -R $PWD
             git reset --hard ${{ env.BASE }}
-            git status
-            git log
+            # git status
+            # git log
             # ls -lags
             # echo "$PWD"
 
@@ -257,23 +257,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+            git config user.name ${{ env.USERNAME }}
+            git config user.email ${{ env.USERNAME_EMAIL }}
             git status
-            # GITHUB_TOKEN
-            # echo "$PWD"
-            # modified_files=$(git diff --name-status)
-            # echo "${modified_files}"
-
-            # Filter for added (new) files
-            # new_files=$(echo "${modified_files}" | awk '$1 == "A" {print $2}')
-
-            # Iterate through new files and stage them
-            # for file in $new_files; do
-            #     git add "$file"
-            # done
-
             git add catalogs/sources/.
             git commit -m "Automated commit — New/Updated feed"
-            git push origin "${{ steps.create_branch_name.outputs.BRANCH }}"
+            git push --set-upstream origin "${{ steps.create_branch_name.outputs.BRANCH }}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.2
