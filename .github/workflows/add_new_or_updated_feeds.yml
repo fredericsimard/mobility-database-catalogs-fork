@@ -76,7 +76,7 @@ jobs:
             git checkout -b ${{ steps.create_branch_name.outputs.BRANCH }}
             chmod 755 -R $PWD
             git reset --hard ${{ env.BASE }}
-            git push --set-upstream origin 2023-09-21
+            git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
             # git status
             # git log
             # ls -lags
