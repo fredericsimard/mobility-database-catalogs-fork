@@ -253,13 +253,13 @@ jobs:
 
       - name: Commit & push
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-        uses: actions-js/push@v1.4
+        uses: EndBug/add-and-commit@v9.1.3
         with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
-            author_name: ${{ env.USERNAME }}
-            author_email: ${{ env.USERNAME_EMAIL }}
+            committer_name: ${{ env.USERNAME }}
+            committer_email: ${{ env.USERNAME_EMAIL }}
             message: "Automated commit — New/Updated feed"
-            branch: "${{ steps.create_branch_name.outputs.BRANCH }}"
+            add: 'catalogs/sources/.'
 
     #   - name: Commit
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
