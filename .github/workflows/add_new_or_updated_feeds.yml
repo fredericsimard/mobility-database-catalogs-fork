@@ -103,11 +103,16 @@ jobs:
                 fi
             done <<< "$csv_data_no_headers"
 
+            echo "csv_lines : ${csv_lines}"
+
             # Default values for variables
             PYTHON_SCRIPT_ARGS=""
 
             # Cycle through the lines added in the last 24h
             for line in $csv_lines[@]; do
+                
+                echo "current line : ${line}"
+
                 IFS=','
 
                 read -ra items_array <<< "$line"
