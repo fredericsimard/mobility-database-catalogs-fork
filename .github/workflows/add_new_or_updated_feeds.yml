@@ -43,7 +43,7 @@ jobs:
       - name: Create branch name
         id: create_branch_name
         run: |
-            echo "BRANCH=\"${{ env.TODAYS_YEAR }}-${{ env.TODAYS_MONTH }}-${{ env.TODAYS_DAY }}\"" >> $GITHUB_OUTPUT # Branch name
+            echo "BRANCH=${{ env.TODAYS_YEAR }}-${{ env.TODAYS_MONTH }}-${{ env.TODAYS_DAY }}" >> $GITHUB_OUTPUT # Branch name
 
       - name: Load secrets from 1Password
         id: onepw_secrets
@@ -277,7 +277,7 @@ jobs:
     #         git add catalogs/sources/.
     #         git commit -m "Automated commit — New/Updated feed"
     #         # git status
-    #         git push --set-upstream origin "${{ steps.create_branch_name.outputs.BRANCH }}"
+    #         git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
 
       - name: Create Pull Request
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
