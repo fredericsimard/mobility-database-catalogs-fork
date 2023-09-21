@@ -205,7 +205,7 @@ jobs:
 
                 echo "PYTHON_SCRIPT_ARGS_TEMP : ${PYTHON_SCRIPT_ARGS_TEMP}"
 
-                PYTHON_SCRIPT_ARGS="${PYTHON_SCRIPT_ARGS}${PYTHON_SCRIPT_ARGS_TEMP}/n"
+                PYTHON_SCRIPT_ARGS=$(echo -e "${PYTHON_SCRIPT_ARGS}\n${PYTHON_SCRIPT_ARGS_TEMP}")
 
             done # end loop
 
