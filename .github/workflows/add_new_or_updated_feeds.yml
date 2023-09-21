@@ -212,6 +212,8 @@ jobs:
             # Remove the extra newline at the end using sed
             PYTHON_SCRIPT_ARGS=$(echo -e "$PYTHON_SCRIPT_ARGS" | sed '$ d')
 
+            echo "PYTHON_SCRIPT_ARGS : ${PYTHON_SCRIPT_ARGS}"
+
             echo "PYTHON_SCRIPT_ARGS=${PYTHON_SCRIPT_ARGS}" >> $GITHUB_OUTPUT
 
       - name: Setup Python
