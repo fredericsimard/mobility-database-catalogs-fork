@@ -279,18 +279,18 @@ jobs:
     #         # git status
     #         git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
 
-    #   - name: Create Pull Request
-    #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-    #     uses: peter-evans/create-pull-request@v5.0.2
-    #     with:
-    #         token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }} # ${{ env.CREDENTIALS }}
-    #         title: "new JSON"
-    #         commit-message: "New JSON"
-    #         body: "body"
-    #         author: "${{ env.USERNAME }} <${{ env.USERNAME_EMAIL }}>"
-    #         reviewers: ${{ env.REVIEWERS_JSON }}
-    #         branch: ${{ steps.create_branch_name.outputs.BRANCH }}
-    #         base: ${{ env.BASE }}
+      - name: Create Pull Request
+        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
+        uses: peter-evans/create-pull-request@v5.0.2
+        with:
+            token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }} # ${{ env.CREDENTIALS }}
+            title: "new JSON"
+            commit-message: "New JSON"
+            body: "body"
+            author: "${{ env.USERNAME }} <${{ env.USERNAME_EMAIL }}>"
+            reviewers: ${{ env.REVIEWERS_JSON }}
+            branch: ${{ steps.create_branch_name.outputs.BRANCH }}
+            base: ${{ env.BASE }}
 
     #   - name: Deactivate virtual environment
     #     shell: bash
