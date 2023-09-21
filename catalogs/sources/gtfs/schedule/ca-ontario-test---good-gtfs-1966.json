@@ -1,0 +1,28 @@
+{
+    "mdb_source_id": 1966,
+    "data_type": "gtfs",
+    "provider": "Test - Good",
+    "name": "Test",
+    "features": "",
+    "status": "",
+    "location": {
+        "country_code": "CA",
+        "subdivision_name": "Ontario",
+        "municipality": "Toronto",
+        "bounding_box": {
+            "minimum_latitude": 43.669899186438,
+            "maximum_latitude": 43.70807,
+            "minimum_longitude": -72.29457,
+            "maximum_longitude": -72.2626129475841,
+            "extracted_on": "2023-09-21T20:18:55+00:00"
+        }
+    },
+    "urls": {
+        "direct_download": "https://data.trilliumtransit.com/gtfs/dartmouth-vt-us/dartmouth-vt-us.zip",
+        "authentication_type": "",
+        "authentication_info": "",
+        "api_key_parameter_name": "",
+        "latest": "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-ontario-test---good-gtfs-1966.zip?alt=media",
+        "license": "https://www.data.rio/datasets/gtfs-do-rio-de-janeiro/about"
+    }
+}
