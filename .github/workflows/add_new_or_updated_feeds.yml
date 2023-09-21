@@ -228,7 +228,7 @@ jobs:
                         else # ... assume this is a new source by default :: add_gtfs_schedule_source
                             echo -e "   ASSUMING DEFAULT, NEW SOURCE"
 
-                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${tripupdatesurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, subdivision_name=${subdivision_name}, municipality=${municipality}, license_url=${license_url}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})"
+                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, subdivision_name=${subdivision_name}, municipality=${municipality}, license_url=${license_url}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})"
 
                         fi
 
