@@ -1,4 +1,4 @@
-name: Add new or updated feeds
+name: Add new or updated feeds from Google Sheets/Form
 
 on:
   push:
@@ -9,24 +9,21 @@ on:
 #         - cron: '0 0 * * *' # At 00:00 UTC every day
 
 env:
-    DATE_FORMAT: "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}" # this is the format we need to compare dates in the CSV and the local system.
+    CSV_URL: "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv"
+    
+    DATE_FORMAT: "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}" # this is the format we need to compare dates between the CSV and the local system.
+    
     USERNAME: "github-actions[bot]" # GitHub username that will create the PR
     USERNAME_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
-    #ACCESS_TOKEN: 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 # The access token associated with the USERNAME above, should have "repo" scope to access the repositories. See "CREATE_PR_FOR_MB_CATALOG_AUTOMATION" in 1Password, Public Transit vault.
-    ORGANIZATION: MobilityData # organization name
-    REPO: mobity-database-catalogs # repository name
-    BASE: "main"
-    REVIEWERS_JSON: "[\"emmambd\"]" # List of GitHub usernames of the reviewers, in a JSON array : ["username1", "username2"]
     
-    PYTHON_SCRIPT_PATH: "tools/operations.py" # full path of where the Python script is located.
-    PYTHON_BRIDGE_SCRIPT_PATH: "/root/python_bridge_script.py" # full path of where the Python bridge script is located.
-    LOCAL_REPO_PATH_AKA_ROOT: "/root/mobility-database-catalogs/"
-    SOURCE_CATALOG_PATH_FROM_ROOT: "catalogs/source"
+    ORGANIZATION: MobilityData # organization name
+    REPO_NAME: mobity-database-catalogs # repository name
+    BASE: "main"
+    
+    REVIEWERS_JSON: "[\"emmambd\"]" # List of GitHub usernames of the reviewers, in a JSON array : ["username1", "username2"]
 
     GTFS_SCHEDULE_CATALOG_PATH_FROM_ROOT: "catalogs/sources/gtfs/schedule/"
     GTFS_REALTIME_CATALOG_PATH_FROM_ROOT: "catalogs/sources/gtfs/realtime/"
-    GTFS_SCHEDULE_CATALOG_PATH: "gtfs/schedule/"
-    GTFS_REALTIME_CATALOG_PATH: "gtfs/realtime/"
 
 jobs:
   add-new-updated-feeds:
@@ -52,9 +49,7 @@ jobs:
             export-env: true # Export loaded secrets as environment variables
         env:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-            SECRET: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/zmccajmekpljwy5udft22g5iby/credential"
             CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
-            # op://<vault>/<item>[/<section>]/<field>  — Or right-click on the field and select copy secret reference
 
       - name: Checkout repo
         id: checkout_repo
@@ -64,31 +59,18 @@ jobs:
             fetch-depth: 0
             token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }} # ${{ env.CREDENTIALS }} 
 
-    #   - name: Set up Git
-    #     id: git-setup
-    #     run: |
-    #         git config user.name ${{ env.USERNAME }}
-    #         git config user.email ${{ env.USERNAME_EMAIL }}
-
       - name: Create new branch
         shell: bash
         run: |
             git checkout -b ${{ steps.create_branch_name.outputs.BRANCH }}
-            chmod 755 -R $PWD
             git reset --hard ${{ env.BASE }}
-            # git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
-            # git status
-            # git log
-            # ls -lags
-            # echo "$PWD"
 
       - name: Download CSV and process each lines
         id: process-csv
         shell: bash
         run: |
-            # set -x
-            # function to extract a date in the proper format for this script.
             extract_date() {
+                # function to extract a date in the proper format for this script.
                 # USAGE : date=$(extract_date "7/5/2023 15:50:58")
                 #         echo "Extracted date: $date"
                 local text="$1"
@@ -105,12 +87,15 @@ jobs:
                 echo "$formatted_date"
             }
 
-            CSV_DATA=$(curl -sL "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv")
+            # Download the CSV data from the Google Sheet
+            CSV_DATA=$(curl -sL ${{ env.CSV_URL }})
 
+            # Remove the header row, not needed.
             IFS=$'\n'
             csv_data_no_headers=$(awk 'NR>1' <<< "${CSV_DATA}")
             declare -a csv_lines
 
+            # Filter out the lines that haven't been added in the last 24h
             while IFS= read -r line; do
                 extracted_date=$(extract_date "$line")
                 if [[ "$extracted_date" == "${{ env.TODAYS_DATE }}" ]]; then
@@ -118,8 +103,10 @@ jobs:
                 fi
             done <<< "$csv_data_no_headers"
 
-            # lines=$(echo "${{ steps.download_csv.outputs.CSVLINES }}" | jq -r .)
+            # Default values for variables
+            PYTHON_SCRIPT_ARGS=""
 
+            # Cycle through the lines added in the last 24h
             for line in $csv_lines[@]; do
                 IFS=','
 
@@ -154,81 +141,79 @@ jobs:
                 # We need to extract a date from the first column to test against today's date.
                 DATE_FROM_CSV=$(extract_date $timestamp)
 
-                if [[ "$DATE_FROM_CSV" = "${{ env.TODAYS_DATE }}" ]]
-                    then # ...the row has been added today, process it.
-                        echo -e "FOUND ONE ROW ADDED TODAY: $provider"
-                        # Default values for variables
-                        PYTHON_SCRIPT_ARGS=""
-                        PYTHON_SCRIPT_OUTPUT=""
+                PYTHON_SCRIPT_ARGS_TEMP=""
 
-                        # Create the argument string to send to the Python script
-                        if [[ $issuetype = "New source" ]]
-                        then
-                            echo -e "   NEW SOURCE"
+                echo -e "FOUND ONE ROW ADDED TODAY: $provider"
 
-                            if [[ $datatype1 = *"Schedule"* ]]
-                            then # add_gtfs_schedule_source
+                # Create the argument string to send to the Python script
+                if [[ $issuetype = "New source" ]]
+                then
+                    echo -e "   NEW SOURCE"
 
-                                PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider='${provider}', country_code='${country}', direct_download_url='${tripupdatesurl}', authentication_type='${authentication_type}', authentication_info_url='${authentication_info_url}', api_key_parameter_name='${api_key_parameter_name}', subdivision_name='${subdivision_name}', municipality='${municipality}', license_url='${license_url}', name='${name}', status='${status1}', features='${features1}')"
+                    if [[ $datatype1 = *"Schedule"* ]]
+                    then # add_gtfs_schedule_source
 
-                            elif [[ $datatype1 = *"Realtime"* ]]
-                            then # add_gtfs_realtime_source
-                                # Emma: entity_type matches the realtime Data type options of Vehicle Positions, Trip Updates, or Service Alerts.
-                                # If one of those three are selected, add it. If not, omit it.
+                        PYTHON_SCRIPT_ARGS_TEMP="add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, subdivision_name=${subdivision_name}, municipality=${municipality}, license_url=${license_url}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})"
+                    
+                    elif [[ $datatype1 = *"Realtime"* ]]
+                    then # add_gtfs_realtime_source
+                    
+                        # Emma: entity_type matches the realtime Data type options of Vehicle Positions, Trip Updates, or Service Alerts.
+                        # If one of those three are selected, add it. If not, omit it.
 
-                                PYTHON_SCRIPT_ARGS="add_gtfs_realtime_source(entity_type=\"$datatype1\", provider=\"$provider\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", name=\"$name\", static_reference=\"\", note=\"$note\", status=\"$status2\", features=\"$features2\")"
-                            fi
-
-                        elif [[ $issuetype = "Source update" ]]
-                        then
-                            echo -e "   SOURCE UPDATE"
-
-                            if [[ $datatype1 = *"Schedule"* ]]
-                            then # update_gtfs_schedule_source
-
-                                PYTHON_SCRIPT_ARGS="update_gtfs_schedule_source(mdb_source_id=\"\", provider=\"$provider\", name=\"$name\", country_code=\"$country\", subdivision_name=\"$subdivision_name\", municipality=\"$municipality\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", status=\"$status1\", features=\"$features1\")"
-
-                            elif [[ $datatype1 = *"Realtime"* ]]
-                            then # update_gtfs_realtime_source
-
-                                PYTHON_SCRIPT_ARGS="update_gtfs_realtime_source(mdb_source_id=\"\", entity_type=\"$datatype1\", provider=\"$provider\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", name=\"$name\", static_reference=\"TO_BE_PROVIDED\", note=\"$note\", status=\"$status2\", features=\"$features2\")"
-
-                            fi
-
-                        elif [[ $issuetype = *"removed"* ]]
-                        then
-                            echo -e "   REMOVING SOURCE"
-
-                            # Emma: It's very rarely selected. In those cases, you could just update the name field of the feed "requested for removal" and I can decide what to do with it manually.
-
-                                if [[ $datatype1 = *"Schedule"* ]]
-                                then # update_gtfs_schedule_source
-
-                                    PYTHON_SCRIPT_ARGS="update_gtfs_schedule_source(mdb_source_id=\"\", provider=\"$provider\", name=\"**** Requested for removal ****\", country_code=\"$country\", subdivision_name=\"$subdivision_name\", municipality=\"$municipality\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", status=\"$status1\", features=\"$features1\")"
-
-                                elif [[ $datatype1 = *"Realtime"* ]]
-                                then # update_gtfs_realtime_source
-
-                                    PYTHON_SCRIPT_ARGS="update_gtfs_realtime_source(mdb_source_id=\"\", entity_type=\"$datatype1\", provider=\"$provider\", direct_download_url=\"$tripupdatesurl\", authentication_type=\"$authentication_type\", authentication_info_url=\"$authentication_info_url\", api_key_parameter_name=\"$api_key_parameter_name\", license_url=\"$license_url\", name=\"**** Requested for removal ****\", static_reference=\"TO_BE_PROVIDED\", note=\"$note\", status=\"$status2\", features=\"$features2\")"
-
-                                fi
-
-                        else # ... assume this is a new source by default :: add_gtfs_schedule_source
-                            echo -e "   ASSUMING DEFAULT, NEW SOURCE"
-
-                            PYTHON_SCRIPT_ARGS="add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, subdivision_name=${subdivision_name}, municipality=${municipality}, license_url=${license_url}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})"
+                        PYTHON_SCRIPT_ARGS_TEMP="add_gtfs_realtime_source(entity_type=${datatype1}, provider=${provider}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, license_url=${license_url}, name=${name}, static_reference=TO_BE_PROVIDED, note=${note}, status=${status2}, features=${features2})"
 
                         fi
 
-                        
+                elif [[ $issuetype = "Source update" ]]
+                then
+                    echo -e "   SOURCE UPDATE"
 
-                # Activate the Python virtual environment
-                    fi # END ...the row has been added today, process it.
+                    if [[ $datatype1 = *"Schedule"* ]]
+                    then # update_gtfs_schedule_source
+
+                        PYTHON_SCRIPT_ARGS_TEMP="update_gtfs_schedule_source(mdb_source_id=}}, provider=${provider}, name=${name}, country_code=${country}, subdivision_name=${subdivision_name}, municipality=${municipality}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, license_url=${license_url}, status=${status1}, features=${features1})"
+
+                    elif [[ $datatype1 = *"Realtime"* ]]
+                    then # update_gtfs_realtime_source
+
+                        PYTHON_SCRIPT_ARGS_TEMP="update_gtfs_realtime_source(mdb_source_id=}}, entity_type=${datatype1}, provider=${provider}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, license_url=${license_url}, name=${name}, static_reference=TO_BE_PROVIDED, note=${note}, status=${status2}, features=${features2})"
+
+                    fi
+
+                elif [[ $issuetype = *"removed"* ]]
+                then
+                    echo -e "   REMOVING SOURCE"
+
+                    # Emma: It's very rarely selected. In those cases, you could just update the name field of the feed "requested for removal" and I can decide what to do with it manually.
+
+                        if [[ $datatype1 = *"Schedule"* ]]
+                        then # update_gtfs_schedule_source
+
+                            PYTHON_SCRIPT_ARGS_TEMP="update_gtfs_schedule_source(mdb_source_id=}}, provider=${provider}, name=}**** Requested for removal ****}, country_code=${country}, subdivision_name=${subdivision_name}, municipality=${municipality}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, license_url=${license_url}, status=${status1}, features=${features1})"
+
+                        elif [[ $datatype1 = *"Realtime"* ]]
+                        then # update_gtfs_realtime_source
+
+                            PYTHON_SCRIPT_ARGS_TEMP="update_gtfs_realtime_source(mdb_source_id=}}, entity_type=${datatype1}, provider=${provider}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, license_url=${license_url}, name=}**** Requested for removal ****}, static_reference=TO_BE_PROVIDED, note=${note}, status=${status2}, features=${features2})"
+
+                        fi
+
+                else # ... assume this is a new source by default :: add_gtfs_schedule_source
+                    echo -e "   ASSUMING DEFAULT, NEW SOURCE"
+
+                    PYTHON_SCRIPT_ARGS_TEMP="add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatednewsourceurl}, authentication_type=${authentication_type}, authentication_info_url=${authentication_info_url}, api_key_parameter_name=${api_key_parameter_name}, subdivision_name=${subdivision_name}, municipality=${municipality}, license_url=${license_url}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})"
+
+                fi
+
+                PYTHON_SCRIPT_ARGS="${PYTHON_SCRIPT_ARGS}${PYTHON_SCRIPT_ARGS}/n"
 
             done # end loop
 
+            # Remove the extra newline at the end using sed
+            PYTHON_SCRIPT_ARGS=$(echo -e "$PYTHON_SCRIPT_ARGS" | sed '$ d')
+
             echo "PYTHON_SCRIPT_ARGS=${PYTHON_SCRIPT_ARGS}" >> $GITHUB_OUTPUT
-            # set +x
 
       - name: Setup Python
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
@@ -236,14 +221,14 @@ jobs:
         with:
           python-version: '3.11' # install the python version needed
 
-      - name: Create & activate a Python virtual env & run the script
+      - name: Create + activate a Python virtual env & Run the script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         env:
           PYTHONPATH: ${{ github.workspace }}/tools
           PYTHONIOENCODING: "utf8" #ascii
         shell: bash
         run: |
-            # echo "ARGS: ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
+            echo "ARGS: ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
             python -m venv env
             source env/bin/activate
             pip install virtualenv --quiet
@@ -251,7 +236,10 @@ jobs:
             pip install unidecode --quiet
             echo "PYTHONPATH=${PYTHONPATH}"
             echo "PYTHONIOENCODING=${PYTHONIOENCODING}"
-            python -c 'from tools.operations import *; ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+            IFS=$'\n'
+            while IFS= read -r line; do
+                python -c 'from tools.operations import *; ${line}'
+            done <<< "${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
 
       - name: Commit & push
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
@@ -264,20 +252,6 @@ jobs:
             committer_name: ${{ env.USERNAME }}
             committer_email: ${{ env.USERNAME_EMAIL }}
             message: "Automated commit — New/Updated feed"
-            # add: 'catalogs/sources/.'
-
-    #   - name: Commit
-    #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-    #     shell: bash
-    #     env:
-    #       GITHUB_TOKEN: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
-    #     run: |
-    #         git config user.name ${{ env.USERNAME }}
-    #         git config user.email ${{ env.USERNAME_EMAIL }}
-    #         git add catalogs/sources/.
-    #         git commit -m "Automated commit — New/Updated feed"
-    #         # git status
-    #         git push --set-upstream origin ${{ steps.create_branch_name.outputs.BRANCH }}
 
     #   - name: Create Pull Request
     #     if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
@@ -291,8 +265,6 @@ jobs:
     #         reviewers: ${{ env.REVIEWERS_JSON }}
     #         branch: ${{ steps.create_branch_name.outputs.BRANCH }}
     #         base: ${{ env.BASE }}
-
-    #   - name: Deactivate virtual environment
-    #     shell: bash
-    #     run: |
-    #       deactivate
+    #         add-paths: |
+    #             ${{ env.GTFS_SCHEDULE_CATALOG_PATH_FROM_ROOT }}
+    #             ${{ env.GTFS_REALTIME_CATALOG_PATH_FROM_ROOT }}
