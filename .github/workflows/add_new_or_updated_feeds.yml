@@ -253,9 +253,9 @@ jobs:
 
       - name: Commit & push
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-        uses: actions-js/push@master
+        uses: actions-js/push@v1.4
         with:
-            github_token: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
+            github_token: ${{ secrets.GITHUB_TOKEN }}
             author_name: ${{ env.USERNAME }}
             author_email: ${{ env.USERNAME_EMAIL }}
             message: "Automated commit — New/Updated feed"
