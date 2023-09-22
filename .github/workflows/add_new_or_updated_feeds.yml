@@ -85,7 +85,7 @@ jobs:
             NODE_AUTH_TOKEN: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
         with:
             script: |
-                const nodeFetch = import('node-fetch');
+                const node_fetch = import('node-fetch');
                 
                 function extractDate(text, dateFormat) {
                     // Function to extract a date in the proper format for this script.
@@ -109,7 +109,7 @@ jobs:
                 const url = "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv";
                     
                 try {
-                    const response = nodeFetch(url);
+                    const response = node_fetch(url);
                     
                     if (!response.ok) {
                         throw new Error(`Failed to fetch CSV data: ${response.status} ${response.statusText}`);
