@@ -106,7 +106,7 @@ jobs:
                     }
                 }
                 
-                const url = ${{ env.CSV_URL }};
+                const url = "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv";
                     
                 try {
                     const response = nodeFetch(url);
@@ -122,7 +122,7 @@ jobs:
                 
                     // Get the current date in the same format as extracted_date
                     const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-                    console.log('currentDate : ' + currentDate)
+                    console.log('currentDate : ' + currentDate);
                 
                     // Filter out lines added in the last 24 hours
                     const filteredLines = csvLines.filter((line) => {
@@ -135,7 +135,7 @@ jobs:
                 
                     for (const curLine of filteredLines) {
                         const itemsArray = curLine.split(',');
-                        console.log("current cur_line : " + itemsArray);
+                        console.log('current cur_line : ' + itemsArray);
                     
                         const [
                             timestamp,
@@ -172,7 +172,7 @@ jobs:
                         let PYTHON_SCRIPT_ARGS_TEMP = "";
                 
                         if (request === "New source") {
-                            console.log('   NEW SOURCE')
+                            console.log('   NEW SOURCE');
                 
                             if (datatype1.includes("Schedule")) {
                                 
@@ -187,7 +187,7 @@ jobs:
                             }
                 
                         } else if (request === "Source update") {
-                            console.log('   SOURCE UPDATE')
+                            console.log('   SOURCE UPDATE');
                             
                             if (datatype1.includes("Schedule")) {
                                 
@@ -202,7 +202,7 @@ jobs:
                         } else if (request.includes("removed")) {
                             // Emma: It's very rarely selected. In those cases, you could just update the name field of the feed "requested for removal" and I can decide what to do with it manually.
                 
-                            console.log('   REMOVAL')
+                            console.log('   REMOVAL');
                 
                             if (datatype1.includes("Schedule")) {
                                 
@@ -215,7 +215,7 @@ jobs:
                             }
                 
                         } else { // ... assume this is a new source by default :: add_gtfs_schedule_source
-                            console.log('   ASSUMING DEFAULT, NEW SOURCE')
+                            console.log('   ASSUMING DEFAULT, NEW SOURCE');
                 
                             PYTHON_SCRIPT_ARGS_TEMP = `add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, subdivision_name=${subdivisionName}, municipality=${municipality}, license_url=${licenseUrl}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})`;
                             
@@ -227,12 +227,12 @@ jobs:
                 
                     // Remove the extra newline at the end
                     PYTHON_SCRIPT_ARGS = PYTHON_SCRIPT_ARGS.trim();
-                    console.log('PYTHON_SCRIPT_ARGS : ' + PYTHON_SCRIPT_ARGS)
+                    console.log('PYTHON_SCRIPT_ARGS : ' + PYTHON_SCRIPT_ARGS);
                 
                     core.setOutput('PYTHON_SCRIPT_ARGS', PYTHON_SCRIPT_ARGS);
                 
                 } catch (error) {
-                    console.error('Error:' + error.message);
+                    console.error('Error : ' + error.message);
                 }
 
       - name: Setup Python
