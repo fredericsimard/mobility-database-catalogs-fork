@@ -150,7 +150,7 @@ jobs:
                 echo -e "FOUND ONE ROW ADDED TODAY: $provider"
 
                 # Create the argument string to send to the Python script
-                if [[ $issuetype = "New source" ]]
+                if [[ $request = "New source" ]]
                 then
                     echo -e "   NEW SOURCE"
 
@@ -169,7 +169,7 @@ jobs:
 
                         fi
 
-                elif [[ $issuetype = "Source update" ]]
+                elif [[ $request = "Source update" ]]
                 then
                     echo -e "   SOURCE UPDATE"
 
@@ -185,7 +185,7 @@ jobs:
 
                     fi
 
-                elif [[ $issuetype = *"removed"* ]]
+                elif [[ $request = *"removed"* ]]
                 then
                     echo -e "   REMOVING SOURCE"
 
