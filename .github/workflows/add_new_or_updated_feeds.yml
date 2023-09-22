@@ -85,7 +85,7 @@ jobs:
             NODE_AUTH_TOKEN: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
         with:
             script: |
-                const nodeFetch = require('node-fetch');
+                const nodeFetch = import('node-fetch');
                 
                 function extractDate(text, dateFormat) {
                     // Function to extract a date in the proper format for this script.
