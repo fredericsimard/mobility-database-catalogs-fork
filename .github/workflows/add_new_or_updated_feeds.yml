@@ -76,7 +76,10 @@ jobs:
 
       - name: Setup Javascript
         shell: bash
-        run: npm install node-fetch
+        run: |
+            rm -rf node_modules
+            npm init -y
+            npm install node-fetch
 
       - name: Download CSV and process each lines
         id: process-csv
