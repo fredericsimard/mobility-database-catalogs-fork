@@ -89,7 +89,7 @@ jobs:
                     // Function to extract a date in the proper format for this script.
                     // USAGE: const date = extractDate("7/5/2023 15:50:58", process.env.DATE_FORMAT);
                 
-                    const extractedDate = text.match(new RegExp(${{ env.DATE_FORMAT }}))[0];
+                    const extractedDate = text.match(new RegExp("${{ env.DATE_FORMAT }}"))[0];
                 
                     if (/^\d{4}-\d{2}-\d{2}$/.test(extractedDate)) {
                         // Convert "yyyy-mm-dd" to "mm/dd/yyyy"
@@ -104,7 +104,7 @@ jobs:
                     }
                 }
                 
-                const url = 'https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv';
+                const url = ${{ env.CSV_URL }};
                     
                 try {
                     const response = nodeFetch(url);
@@ -124,7 +124,7 @@ jobs:
                 
                     // Filter out lines added in the last 24 hours
                     const filteredLines = csvLines.filter((line) => {
-                        const extractedDate = extractDate(line, process.env.DATE_FORMAT); // CHange here
+                        const extractedDate = extractDate(line, "${{ env.DATE_FORMAT }}");
                         return extractedDate === currentDate;
                     });
                 
