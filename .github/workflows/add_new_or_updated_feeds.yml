@@ -81,6 +81,8 @@ jobs:
       - name: Download CSV and process each lines
         id: process-csv
         uses: actions/github-script@v6
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
         with:
             script: |
                 const nodeFetch = require('node-fetch');
