@@ -9,9 +9,10 @@ on:
 #         - cron: '0 0 * * *' # At 00:00 UTC every day
 
 env:
-    CSV_URL: "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv"
+    # CSV_URL: "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv"
     
     DATE_FORMAT: "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}" # this is the format we need to compare dates between the CSV and the local system.
+    DATE_FORMAT_DESIRED: "MM/dd/yyyy"
     
     USERNAME: "github-actions[bot]" # GitHub username that will create the PR
     USERNAME_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
@@ -50,6 +51,7 @@ jobs:
         env:
             OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
             CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
+            CSV_URL: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/URLS/mobility database catalogs google sheets URL for new feeds"
 
       - name: Checkout repo
         id: checkout_repo
@@ -65,178 +67,20 @@ jobs:
             git checkout -b ${{ steps.create_branch_name.outputs.BRANCH }}
             git reset --hard ${{ env.BASE }}
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.8.1
+      - name: Setup Swift
+        uses: SwiftyLab/setup-swift@v1.4.0
         with:
-          node-version: '16.x'
+            swift-version: "5.8.0"
 
-      - name: Install Node.js dependencies
-        shell: bash
-        run: npm install @actions/github
-
-      - name: Setup Javascript
-        shell: bash
-        run: |
-            rm -rf node_modules
-            npm init -y
-            npm install node-fetch
+      - name: Get swift version
+        run: swift --version
 
       - name: Download CSV and process each lines
         id: process-csv
-        uses: actions/github-script@v6
-        env:
-            NODE_AUTH_TOKEN: ${{ secrets.FRED_PERSONAL_GITHUB_TOKEN }}
-        with:
-            script: |
-                const node_fetch = import('node-fetch');
-                
-                function extractDate(text, dateFormat) {
-                    // Function to extract a date in the proper format for this script.
-                    // USAGE: const date = extractDate("7/5/2023 15:50:58", process.env.DATE_FORMAT);
-                
-                    const extractedDate = text.match(new RegExp("${{ env.DATE_FORMAT }}"))[0];
-                
-                    if (/^\d{4}-\d{2}-\d{2}$/.test(extractedDate)) {
-                        // Convert "yyyy-mm-dd" to "mm/dd/yyyy"
-                        const parts = extractedDate.split('-');
-                        const formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
-                        return formattedDate;
-                    } else {
-                        // Convert "m/d/yyyy" to "mm/dd/yyyy"
-                        const parts = extractedDate.split('/');
-                        const formattedDate = `${parts[0].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[2]}`;
-                        return formattedDate;
-                    }
-                }
-                
-                const url = "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv";
-                    
-                try {
-                    const response = node_fetch(url);
-                    
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch CSV data: ${response.status} ${response.statusText}`);
-                    }
-                
-                    const csvData = response.text();
-                
-                    // Split CSV data into lines and remove the header row
-                    const csvLines = csvData.trim().split('\n').slice(1);
-                
-                    // Get the current date in the same format as extracted_date
-                    const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-                    console.log('currentDate : ' + currentDate);
-                
-                    // Filter out lines added in the last 24 hours
-                    const filteredLines = csvLines.filter((line) => {
-                        const extractedDate = extractDate(line, "${{ env.DATE_FORMAT }}");
-                        return extractedDate === currentDate;
-                    });
-                
-                    // Initialize variable
-                    let PYTHON_SCRIPT_ARGS = "";
-                
-                    for (const curLine of filteredLines) {
-                        const itemsArray = curLine.split(',');
-                        console.log('current cur_line : ' + itemsArray);
-                    
-                        const [
-                            timestamp,
-                            provider,
-                            regionCity,
-                            currentUrl,
-                            updatedNewSourceUrl,
-                            datatype1,
-                            request,
-                            downloadUrl,
-                            country,
-                            subdivisionName,
-                            municipality,
-                            name,
-                            yourNameOrg,
-                            licenseUrl,
-                            tripUpdatesUrl,
-                            serviceAlertsUrl,
-                            genUnknownRtUrl,
-                            authenticationType,
-                            authenticationInfoUrl,
-                            apiKeyParameterName,
-                            note,
-                            gtfsschedulefeatures,
-                            gtfsschedulestatus,
-                            gtfsrealtimestatus,
-                            yourEmail,
-                            dataProducerEmail,
-                            realtimeFeatures,
-                            ISOalphaCountryCode,
-                            feedUpdateStatus
-                        ] = itemsArray;
-                
-                        let PYTHON_SCRIPT_ARGS_TEMP = "";
-                
-                        if (request === "New source") {
-                            console.log('   NEW SOURCE');
-                
-                            if (datatype1.includes("Schedule")) {
-                                
-                                PYTHON_SCRIPT_ARGS_TEMP = `add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, subdivision_name=${subdivisionName}, municipality=${municipality}, license_url=${licenseUrl}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})`;
-                            
-                            } else if (datatype1.includes("Realtime")) {
-                                // Emma: entity_type matches the realtime Data type options of Vehicle Positions, Trip Updates, or Service Alerts.
-                                // If one of those three is selected, add it. If not, omit it.
-                                const entityType = ["Vehicle Positions", "Trip Updates", "Service Alerts"].includes(datatype1) ? datatype1 : '';
-                
-                                PYTHON_SCRIPT_ARGS_TEMP = `add_gtfs_realtime_source(entity_type=${entityType}, provider=${provider}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, license_url=${licenseUrl}, name=${name}, static_reference=TO_BE_PROVIDED, note=${note}, status=${gtfsrealtimestatus}, features=${realtimeFeatures})`;
-                            }
-                
-                        } else if (request === "Source update") {
-                            console.log('   SOURCE UPDATE');
-                            
-                            if (datatype1.includes("Schedule")) {
-                                
-                                PYTHON_SCRIPT_ARGS_TEMP = `update_gtfs_schedule_source(mdb_source_id=, provider=${provider}, name=${name}, country_code=${country}, subdivision_name=${subdivisionName}, municipality=${municipality}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, license_url=${licenseUrl}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})`;
-                
-                            } else if (datatype1.includes("Realtime")) {
-                                
-                                PYTHON_SCRIPT_ARGS_TEMP = `update_gtfs_realtime_source(mdb_source_id=, entity_type=${datatype1}, provider=${provider}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, license_url=${licenseUrl}, name=${name}, static_reference=TO_BE_PROVIDED, note=${note}, status=${gtfsrealtimestatus}, features=${realtimeFeatures})`;
-                
-                            }
-                
-                        } else if (request.includes("removed")) {
-                            // Emma: It's very rarely selected. In those cases, you could just update the name field of the feed "requested for removal" and I can decide what to do with it manually.
-                
-                            console.log('   REMOVAL');
-                
-                            if (datatype1.includes("Schedule")) {
-                                
-                                PYTHON_SCRIPT_ARGS_TEMP = `update_gtfs_schedule_source(mdb_source_id=, provider=${provider}, name="**** Requested for removal ****", country_code=${country}, subdivision_name=${subdivisionName}, municipality=${municipality}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, license_url=${licenseUrl}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})`;
-                
-                            } else if (datatype1.includes("Realtime")) {
-                
-                                PYTHON_SCRIPT_ARGS_TEMP = `update_gtfs_realtime_source(mdb_source_id=, entity_type=${datatype1}, provider=${provider}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, license_url=${licenseUrl}, name="**** Requested for removal ****", static_reference=TO_BE_PROVIDED, note=${note}, status=${gtfsrealtimestatus}, features=${realtimeFeatures})`;
-                
-                            }
-                
-                        } else { // ... assume this is a new source by default :: add_gtfs_schedule_source
-                            console.log('   ASSUMING DEFAULT, NEW SOURCE');
-                
-                            PYTHON_SCRIPT_ARGS_TEMP = `add_gtfs_schedule_source(provider=${provider}, country_code=${country}, direct_download_url=${updatedNewSourceUrl}, authentication_type=${authenticationType}, authentication_info_url=${authenticationInfoUrl}, api_key_parameter_name=${apiKeyParameterName}, subdivision_name=${subdivisionName}, municipality=${municipality}, license_url=${licenseUrl}, name=${name}, status=${gtfsschedulestatus}, features=${gtfsschedulefeatures})`;
-                            
-                        }
-                
-                        PYTHON_SCRIPT_ARGS += `\n${PYTHON_SCRIPT_ARGS_TEMP}`;
-                
-                    } // end for loop
-                
-                    // Remove the extra newline at the end
-                    PYTHON_SCRIPT_ARGS = PYTHON_SCRIPT_ARGS.trim();
-                    console.log('PYTHON_SCRIPT_ARGS : ' + PYTHON_SCRIPT_ARGS);
-                
-                    core.setOutput('PYTHON_SCRIPT_ARGS', PYTHON_SCRIPT_ARGS);
-                
-                } catch (error) {
-                    console.error('Error : ' + error.message);
-                }
+        run: |
+            cd ${{ github.workspace }}/scripts
+            OUTPUT=$(swift run process_csv_in_github_action.swift ${{ env.CSV_URL }} "${{ env.DATE_FORMAT }}" "${{ env.DATE_FORMAT_DESIRED }}")
+            echo "PYTHON_SCRIPT_ARGS=${OUTPUT}" >> $GITHUB_OUTPUT
 
       - name: Setup Python
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
