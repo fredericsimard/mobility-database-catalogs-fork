@@ -58,27 +58,17 @@ if arguments.count >= 3 {
     let csvLineSeparator   : String = "\n"
     let csvColumnSeparator : String = ","
 
-    let csvURLStringArg   = arguments[1]
-    let dateFormatGREP    = arguments[2]
-    let dateFormatDesired = arguments[3]
-    
-    // print("csvURLStringArg: \(csvURLStringArg), dateFormatterArg: \(dateFormatterArg)")
+    let csvURLStringArg      = arguments[1]
+    let dateFormatGREPArg    = arguments[2]
+    let dateFormatDesiredArg = arguments[3]
 
     let dateFormatter : DateFormatter = DateFormatter(); let today = Date()
-    dateFormatter.dateFormat = dateFormatDesired
+    dateFormatter.dateFormat = dateFormatDesiredArg
     let todayDate = dateFormatter.string(from: today) // Ex.: 07/27/2023
 
     var csvData = ""
     if let csvURL = URL(string: csvURLStringArg) {
-        //print("download step 1")
-        downloadCSV(from: csvURL) { result in
-            // print("download step 2")
-            switch result {
-            case .success(let tempCsvData): csvData = tempCsvData
-            case .failure(let error): print("Error downloading CSV: \(error)")
-                // Handle the error
-            }
-        }
+        var csvData = try String(contentsOf: csvURL, encoding:.utf8)
     } else {
         print("Error downloading CSV: invalid URL")
     }
@@ -116,7 +106,7 @@ if arguments.count >= 3 {
             let gtfsrealtimestatus      : String = line[column.gtfsrealtimestatus.rawValue]
             let realtimefeatures        : String = line[column.realtimefeatures.rawValue]
             
-            let dateFromCurrentLine     : String = extractDate(from: timestamp, usingGREP: dateFormatGREP)
+            let dateFromCurrentLine     : String = extractDate(from: timestamp, usingGREP: dateFormatGREPArg)
             
             if dateFromCurrentLine == todayDate { // ...the row has been added today, process it.
                 // print("\(terminalColor.green)    -> Found one row added today: \(provider)\(terminalColor.reset)")
