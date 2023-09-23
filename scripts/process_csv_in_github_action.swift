@@ -64,7 +64,7 @@ do {
         let dateFormatDesiredArg = arguments[3]
 
         guard let csvURLasURL = URL(string: csvURLStringArg) else {
-            print("\n   ERROR: The specified URL does not appear to exist :\n   \(systemsCsvSourceURL)\n")
+            print("\n   ERROR: The specified URL does not appear to exist :\n   \(csvURLStringArg)\n")
             exit(1)
         }
 
