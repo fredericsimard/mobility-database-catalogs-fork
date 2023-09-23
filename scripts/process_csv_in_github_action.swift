@@ -186,36 +186,6 @@ func extractDate(from text: String, usingGREP dateFormatAsGREP: String) -> Strin
     return ""
 }
 
-func downloadCSV(from url: URL, completion: @escaping (Result<String, Error>) -> Void) {
-    let group = DispatchGroup.init()
-    group.enter()
-    // print("downloadCSV called : \(url)")
-    let session = URLSession.shared
-    let semaphore : DispatchSemaphore = DispatchSemaphore(value: 0)
-    let task = session.dataTask(with: url) { data, response, error -> Void in
-        defer {  // Defer makes all ends of this scope make something, here we want to leave the dispatch. This is executed when the scope ends, even if with exception.
-            group.leave() // Manually subtract one from the operation count
-        }
-        // print(response!)
-        semaphore.signal()
-        // print("downloadCSV : begin")
-        if let error = error {
-            completion(.failure(error))
-            return
-        }
-        
-        if let data = data, let csvString = String(data: data, encoding: .utf8) {
-            completion(.success(csvString))
-        } else {
-            let unknownError = NSError(domain: "CSVDownloadError", code: -1, userInfo: nil)
-            completion(.failure(unknownError))
-        }
-    }
-    task.resume()
-    semaphore.wait()
-    group.wait()  // Wait for group to end operations.
-}
-
 func runShellCommand(withBinary binary: bin, andArguments args:[String]) -> String? {
 
     // Class objects
