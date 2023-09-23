@@ -56,17 +56,17 @@ do {
 
     if arguments.count != 3 {
 
-        guard let csvURLasURL = URL(string: csvURLStringArg) else {
-            print("\n   ERROR: The specified URL does not appear to exist :\n   \(systemsCsvSourceURL)\n")
-            exit(1)
-        }
-
         let csvLineSeparator   : String = "\n"
         let csvColumnSeparator : String = ","
 
         let csvURLStringArg      = arguments[1]
         let dateFormatGREPArg    = arguments[2]
         let dateFormatDesiredArg = arguments[3]
+
+        guard let csvURLasURL = URL(string: csvURLStringArg) else {
+            print("\n   ERROR: The specified URL does not appear to exist :\n   \(systemsCsvSourceURL)\n")
+            exit(1)
+        }
 
         let dateFormatter : DateFormatter = DateFormatter(); let today = Date()
         dateFormatter.dateFormat = dateFormatDesiredArg
