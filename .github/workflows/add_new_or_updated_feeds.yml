@@ -53,6 +53,9 @@ jobs:
             CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
             # CSV_URL: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/URLS/mobility database catalogs google sheets URL for new feeds"
 
+      - name: Get swift version
+        run: swift --version
+
       - name: Checkout repo
         id: checkout_repo
         uses: actions/checkout@v4
