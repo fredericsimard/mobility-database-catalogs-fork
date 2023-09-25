@@ -100,7 +100,7 @@ jobs:
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
 
-            sections=(echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}' | awk -F'§' '{for (i=1; i<=NF; i++) print $i}')
+            sections=(echo "${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}" | awk -F'§' '{for (i=1; i<=NF; i++) print $i}')
             for section in "${sections[@]}"; do
                 # Process each section here
                 echo "Processing section:"
