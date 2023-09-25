@@ -116,8 +116,8 @@ jobs:
             # echo "ARGS: ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
             IFS=$'\n'
             while IFS= read -r current_line; do
-                python -c 'from tools.operations import *; ${current_line}'
-            done <<< "${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
+                eval "python -c 'from tools.operations import *; ${current_line}'"
+            done <<< "$(echo ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }})"
 
       - name: Commit & push
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
