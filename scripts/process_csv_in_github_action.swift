@@ -60,6 +60,11 @@ let arguments = CommandLine.arguments
 // let arguments : [String] = ["unused", "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv", "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}", "MM/dd/yyyy"]
 
 print("number of args = \(arguments.count)\n")
+    print("args")
+    print("\(arguments[0])\n")
+    print("\(arguments[1])\n")
+    // print("\(arguments[2])\n")
+    // print("\(arguments[3])\nEND")
 
 if arguments.count == 4 {
     let csvLineSeparator   : String = "\n"
