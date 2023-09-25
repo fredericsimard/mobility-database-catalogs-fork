@@ -62,12 +62,12 @@ let arguments = CommandLine.arguments
 
 // let arguments : [String] = ["unused", "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv", "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}", "MM/dd/yyyy"]
 
-print("number of args = \(arguments.count)\n")
-    print("args")
-    print("1. \(arguments[0])\n")
-    print("2. \(arguments[1])\n")
-    // print("3. \(arguments[2])\n")
-    // print("4. \(arguments[3])\nEND")
+// print("number of args = \(arguments.count)\n")
+//     print("args")
+//     print("1. \(arguments[0])")
+//     print("2. \(arguments[1])")
+//     print("3. \(arguments[2])")
+//     print("4. \(arguments[3])\nEND")
 
 if CommandLine.argc == 4 {
     let csvLineSeparator   : String = "\n"
@@ -76,12 +76,6 @@ if CommandLine.argc == 4 {
     let csvURLStringArg      = arguments[1]
     let dateFormatGREPArg    = arguments[2]
     let dateFormatDesiredArg = arguments[3]
-
-    print("args")
-    print("\(arguments[0])\n")
-    print("\(csvURLStringArg)\n")
-    print("\(dateFormatGREPArg)\n")
-    print("\(dateFormatDesiredArg)\nEND")
 
     guard let csvURLasURL = URL(string: csvURLStringArg) else {
         print("\n   ERROR: The specified URL does not appear to exist :\n   \(csvURLStringArg)\n")
