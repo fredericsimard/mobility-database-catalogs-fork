@@ -181,7 +181,7 @@ if CommandLine.argc == 4 {
             // print("Error: Insufficient components in the line. Skipping this entry.")
         } // END ...the row has been added today, process it.
         
-        if PYTHON_SCRIPT_ARGS_TEMP.count > 0 { PYTHON_SCRIPT_OUTPUT = ( PYTHON_SCRIPT_OUTPUT + "\n" + PYTHON_SCRIPT_ARGS_TEMP ) }
+        if PYTHON_SCRIPT_ARGS_TEMP.count > 0 { PYTHON_SCRIPT_OUTPUT = ( PYTHON_SCRIPT_OUTPUT + "§" + PYTHON_SCRIPT_ARGS_TEMP ) }
 
     } // END FOR LOOP
 

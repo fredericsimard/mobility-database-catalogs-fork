@@ -99,7 +99,7 @@ jobs:
             pip install virtualenv --quiet
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
-            IFS=$'\n'
+            IFS=$'§'
             while IFS= read -r current_line; do
                 eval "python -c 'from tools.operations import *; ${current_line}'"
             done <<< "$(echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}')"
