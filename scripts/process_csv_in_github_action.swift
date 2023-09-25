@@ -67,6 +67,11 @@ if arguments.count == 4 {
     let dateFormatGREPArg    = arguments[2]
     let dateFormatDesiredArg = arguments[3]
 
+    print(arguments[0])
+    print(csvURLStringArg)
+    print(dateFormatGREPArg)
+    print(dateFormatDesiredArg)
+
     guard let csvURLasURL = URL(string: csvURLStringArg) else {
         print("\n   ERROR: The specified URL does not appear to exist :\n   \(csvURLStringArg)\n")
         exit(1)
