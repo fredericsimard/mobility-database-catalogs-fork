@@ -61,10 +61,10 @@ let arguments = CommandLine.arguments
 
 print("number of args = \(arguments.count)\n")
     print("args")
-    print("\(arguments[0])\n")
-    print("\(arguments[1])\n")
-    // print("\(arguments[2])\n")
-    // print("\(arguments[3])\nEND")
+    print("1. \(arguments[0])\n")
+    print("2. \(arguments[1])\n")
+    print("3. \(arguments[2])\n")
+    // print("4. \(arguments[3])\nEND")
 
 if arguments.count == 4 {
     let csvLineSeparator   : String = "\n"
