@@ -93,7 +93,7 @@ jobs:
           PYTHONIOENCODING: "utf8" #ascii
         shell: bash
         run: |
-            echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
+            # echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}'
             python -m venv env
             source env/bin/activate
             pip install virtualenv --quiet
@@ -103,8 +103,8 @@ jobs:
             sections=$(echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}' | awk -F'§' '{for (i=1; i<=NF; i++) print $i}')
             for section in "${sections[@]}"; do
                 # Process each section here
-                echo "Processing section:"
-                echo "$section"
+                # echo "Processing section:"
+                # echo "$section"
                 eval "python -c 'from tools.operations import *; ${section}'"
             done
             # while IFS= read -r current_line; do
