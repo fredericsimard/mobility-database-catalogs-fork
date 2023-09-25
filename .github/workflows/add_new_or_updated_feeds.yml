@@ -77,7 +77,7 @@ jobs:
             cd ${{ github.workspace }}/scripts
             OUTPUT=$(swift process_csv_in_github_action.swift "${{ env.CSV_URL }}" "${{ env.DATE_FORMAT }}" "${{ env.DATE_FORMAT_DESIRED }}")
             echo "PYTHON_SCRIPT_ARGS=${OUTPUT}" >> $GITHUB_OUTPUT
-            echo '${OUTPUT}'
+            echo $OUTPUT
             # set +x
 
       - name: Setup Python
