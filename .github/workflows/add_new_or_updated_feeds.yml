@@ -53,8 +53,8 @@ jobs:
             CREDENTIALS: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/ifkeehu5gzi7wy5ub5qvwkaire/credential"
             # CSV_URL: "op://rbiv7rvkkrsdlpcrz3bmv7nmcu/URLS/mobility database catalogs google sheets URL for new feeds"
 
-      - name: Get swift version
-        run: swift --version
+    #   - name: Get swift version
+    #     run: swift --version
 
       - name: Checkout repo
         id: checkout_repo
@@ -81,11 +81,11 @@ jobs:
       - name: Download CSV and process each lines
         id: process-csv
         run: |
-            set -x
+            # set -x
             cd ${{ github.workspace }}/scripts
             OUTPUT=$(swift process_csv_in_github_action.swift "${{ env.CSV_URL }}" "${{ env.DATE_FORMAT }}" "${{ env.DATE_FORMAT_DESIRED }}")
             echo "PYTHON_SCRIPT_ARGS=${OUTPUT}" >> $GITHUB_OUTPUT
-            set +x
+            # set +x
 
       - name: Setup Python
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
@@ -100,14 +100,14 @@ jobs:
           PYTHONIOENCODING: "utf8" #ascii
         shell: bash
         run: |
-            echo "ARGS: ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
+            # echo "ARGS: ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
             python -m venv env
             source env/bin/activate
             pip install virtualenv --quiet
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
-            echo "PYTHONPATH=${PYTHONPATH}"
-            echo "PYTHONIOENCODING=${PYTHONIOENCODING}"
+            # echo "PYTHONPATH=${PYTHONPATH}"
+            # echo "PYTHONIOENCODING=${PYTHONIOENCODING}"
             IFS=$'\n'
             while IFS= read -r current_line; do
                 python -c 'from tools.operations import *; ${current_line}'
