@@ -63,7 +63,7 @@ print("number of args = \(arguments.count)\n")
     print("args")
     print("1. \(arguments[0])\n")
     print("2. \(arguments[1])\n")
-    print("3. \(arguments[2])\n")
+    // print("3. \(arguments[2])\n")
     // print("4. \(arguments[3])\nEND")
 
 if arguments.count == 4 {
