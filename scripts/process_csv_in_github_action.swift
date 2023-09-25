@@ -186,7 +186,7 @@ if CommandLine.argc == 4 {
     } // END FOR LOOP
 
     // return final output
-    print(PYTHON_SCRIPT_OUTPUT.dropFirst().dropLast())
+    print(PYTHON_SCRIPT_OUTPUT.dropFirst()) //.dropLast()
 
 } else {
     print("Incorrect number of arguments provided to the script. Expected 3: a string with the URL, a date format and the date format desired.")
