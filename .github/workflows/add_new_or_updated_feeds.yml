@@ -99,10 +99,17 @@ jobs:
             pip install virtualenv --quiet
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
-            IFS=$'§'
-            while IFS= read -r current_line; do
-                eval "python -c 'from tools.operations import *; ${current_line}'"
-            done <<< "$(echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}')"
+
+            sections=($(echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}') | awk -F'§' '{for (i=1; i<=NF; i++) print $i}'))
+            for section in "${sections[@]}"; do
+                # Process each section here
+                echo "Processing section:"
+                echo "$section"
+                eval "python -c 'from tools.operations import *; ${section}'"
+            done
+            # while IFS= read -r current_line; do
+            #     eval "python -c 'from tools.operations import *; ${current_line}'"
+            # done <<< "$(echo '${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}')"
 
       - name: Commit & push
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
