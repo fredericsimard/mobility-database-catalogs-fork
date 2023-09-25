@@ -93,7 +93,7 @@ jobs:
         with:
           python-version: '3.11' # install the python version needed
 
-      - name: Create + activate a Python virtual env
+      - name: Create + activate a Python virtual env & run script
         if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
         env:
           PYTHONPATH: ${{ github.workspace }}/tools
@@ -105,15 +105,6 @@ jobs:
             pip install virtualenv --quiet
             pip install gtfs_kit --quiet
             pip install unidecode --quiet
-
-      - name: Execute Python script
-        if: steps.process-csv.outputs.PYTHON_SCRIPT_ARGS != ''
-        env:
-          PYTHONPATH: ${{ github.workspace }}/tools
-          PYTHONIOENCODING: "utf8" #ascii
-        shell: bash
-        run: |
-            # echo "ARGS: ${{ steps.process-csv.outputs.PYTHON_SCRIPT_ARGS }}"
             IFS=$'\n'
             while IFS= read -r current_line; do
                 eval "python -c 'from tools.operations import *; ${current_line}'"
