@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
 
 enum column : Int, CaseIterable {
     case timestamp               = 0
@@ -66,7 +69,7 @@ print("number of args = \(arguments.count)\n")
     // print("3. \(arguments[2])\n")
     // print("4. \(arguments[3])\nEND")
 
-if arguments.count == 4 {
+if CommandLine.argc == 4 {
     let csvLineSeparator   : String = "\n"
     let csvColumnSeparator : String = ","
 
