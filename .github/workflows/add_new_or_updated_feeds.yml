@@ -70,14 +70,6 @@ jobs:
             git checkout -b ${{ steps.create_branch_name.outputs.BRANCH }}
             git reset --hard ${{ env.BASE }}
 
-    #   - name: Setup Swift
-    #     uses: SwiftyLab/setup-swift@v1.4.0
-    #     with:
-    #         swift-version: "5.8.1"
-
-    #   - name: Get swift version
-    #     run: swift --version
-
       - name: Download CSV and process each lines
         id: process-csv
         run: |
@@ -85,6 +77,7 @@ jobs:
             cd ${{ github.workspace }}/scripts
             OUTPUT=$(swift process_csv_in_github_action.swift "${{ env.CSV_URL }}" "${{ env.DATE_FORMAT }}" "${{ env.DATE_FORMAT_DESIRED }}")
             echo "PYTHON_SCRIPT_ARGS=${OUTPUT}" >> $GITHUB_OUTPUT
+            echo '${OUTPUT}'
             # set +x
 
       - name: Setup Python
