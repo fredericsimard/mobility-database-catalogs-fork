@@ -62,12 +62,12 @@ let arguments = CommandLine.arguments
 
 // let arguments : [String] = ["unused", "https://docs.google.com/a/google.com/spreadsheets/d/1Q96KDppKsn2khdrkraZCQ7T_qRSfwj7WsvqXvuMt4Bc/gviz/tq?tq=select%20*&tqx=out:csv", "[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}|[0-9]{4}-[0-9]{2}-[0-9]{2}", "MM/dd/yyyy"]
 
-// print("number of args = \(arguments.count)\n")
-//     print("args")
-//     print("1. \(arguments[0])")
-//     print("2. \(arguments[1])")
-//     print("3. \(arguments[2])")
-//     print("4. \(arguments[3])\nEND")
+print("number of args = \(arguments.count)\n")
+    print("args")
+    print("1. \(arguments[0])")
+    print("2. \(arguments[1])")
+    print("3. \(arguments[2])")
+    print("4. \(arguments[3])\nEND")
 
 if CommandLine.argc == 4 {
     let csvLineSeparator   : String = "\n"
@@ -98,6 +98,8 @@ if CommandLine.argc == 4 {
     let dateFormatAsRegex = try Regex(dateFormatGREPArg)
 
     for line : [String] in csvArray {
+
+        // print("current line : \(line)")
         
         // Default values for variables
         var PYTHON_SCRIPT_ARGS_TEMP : String = ""
@@ -124,8 +126,12 @@ if CommandLine.argc == 4 {
             let realtimefeatures        : String = line[column.realtimefeatures.rawValue]
 
             let dateFromCurrentLine = extractDate(from: timestamp, usingGREP: dateFormatAsRegex, desiredDateFormat: dateFormatDesiredArg)
+
+            print("current date : \(dateFromCurrentLine)")
+            print("today : \(todayDate)")
             
             if dateFromCurrentLine == todayDate { // ...the row has been added today, process it.
+                print("today!")
                 // print("\(terminalColor.green)    -> Found one row added today: \(provider)\(terminalColor.reset)")
                 
                 if request.contains(requestType.isAddNewFeed.rawValue) {
@@ -147,11 +153,11 @@ if CommandLine.argc == 4 {
                     
                     if datatype1.contains(dataType.schedule.rawValue) { // update_gtfs_schedule_source
                         
-                        PYTHON_SCRIPT_ARGS_TEMP = "update_gtfs_schedule_source(mdb_source_id=, provider=\(provider), name=\(name), country_code=\(country), subdivision_name=\(subdivision_name), municipality=\(municipality), direct_download_url=\(downloadURL), authentication_type=\(authentication_type), authentication_info_url=\(authentication_info_url), api_key_parameter_name=\(api_key_parameter_name), license_url=\(license_url), status=\(gtfsschedulestatus), features=\(gtfsschedulefeatures))"
+                        PYTHON_SCRIPT_ARGS_TEMP = "update_gtfs_schedule_source(mdb_source_id=\"\", provider=\(provider), name=\(name), country_code=\(country), subdivision_name=\(subdivision_name), municipality=\(municipality), direct_download_url=\(downloadURL), authentication_type=\(authentication_type), authentication_info_url=\(authentication_info_url), api_key_parameter_name=\(api_key_parameter_name), license_url=\(license_url), status=\(gtfsschedulestatus), features=\(gtfsschedulefeatures))"
                         
                     } else if datatype1.contains(dataType.realtime.rawValue) { // update_gtfs_realtime_source
                         
-                        PYTHON_SCRIPT_ARGS_TEMP = "update_gtfs_realtime_source(mdb_source_id=, entity_type=\(datatype1), provider=\(provider), direct_download_url=\(downloadURL), authentication_type=\(authentication_type), authentication_info_url=\(authentication_info_url), api_key_parameter_name=\(api_key_parameter_name), license_url=\(license_url), name=\(name), static_reference=\"TO_BE_PROVIDED\", note=\(note), status=\(gtfsrealtimestatus), features=\(realtimefeatures))"
+                        PYTHON_SCRIPT_ARGS_TEMP = "update_gtfs_realtime_source(mdb_source_id=\"\", entity_type=\(datatype1), provider=\(provider), direct_download_url=\(downloadURL), authentication_type=\(authentication_type), authentication_info_url=\(authentication_info_url), api_key_parameter_name=\(api_key_parameter_name), license_url=\(license_url), name=\(name), static_reference=\"TO_BE_PROVIDED\", note=\(note), status=\(gtfsrealtimestatus), features=\(realtimefeatures))"
                     }
                     
                 }  else if request.contains(requestType.isToRemoveFeed.rawValue) {
